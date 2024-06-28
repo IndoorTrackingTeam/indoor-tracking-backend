@@ -57,7 +57,7 @@ jobs:
     - name: Deploy
       run: |
         gcloud run deploy run-${{ env.IMAGE }} \
-        --image us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/ar-dev-faas/${{ env.IMAGE }}:latest \
+        --image us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/ar-backend/${{ env.IMAGE }}:latest \
         --platform managed \
         --allow-unauthenticated \
         --cpu=$CPU \
