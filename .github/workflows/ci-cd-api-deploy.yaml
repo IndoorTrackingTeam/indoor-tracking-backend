@@ -60,7 +60,6 @@ jobs:
         --image us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/ar-dev-faas/${{ env.IMAGE }}:latest \
         --platform managed \
         --allow-unauthenticated \
-        --vpc-egress=all-traffic \
         --cpu=$CPU \
         --port=$PORT \
         --memory=$MEMORY \
