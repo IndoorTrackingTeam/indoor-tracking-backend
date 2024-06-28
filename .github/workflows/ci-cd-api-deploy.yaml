@@ -63,8 +63,8 @@ jobs:
         --vpc-egress=all-traffic \
         --cpu=$CPU \
         --port=$PORT \
-        --memory=$MEMORY 
-        --region=$REGION \
+        --memory=$MEMORY \
+        --region $REGION \
         --timeout=$TIMEOUT \
         --concurrency=$CONCURRENCY \
         --min-instances=$MIN_INSTANCES \
