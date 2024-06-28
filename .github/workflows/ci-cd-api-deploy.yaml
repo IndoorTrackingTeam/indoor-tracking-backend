@@ -15,7 +15,8 @@ env:
   CONCURRENCY: 80
   MAX_INSTANCES: 1
   MIN_INSTANCES: 0
-  SECRET: ${{ secrets.SECRET }}
+  DB_USER: ${{ secrets.DB_USER }}
+  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
 jobs:
   deploy:
