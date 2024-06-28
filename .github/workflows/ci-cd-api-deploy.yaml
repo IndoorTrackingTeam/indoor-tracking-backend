@@ -3,7 +3,7 @@ name: Build deploy API
 on:
   push:
     branches:
-      - api-deploy
+      - main
 
 env:
   IMAGE: api
