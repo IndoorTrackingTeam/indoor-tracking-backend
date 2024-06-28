@@ -18,7 +18,7 @@ env:
 #  SECRET: ${{ secrets.SECRET }}
 
 jobs:
-  setup-build-publish-deploy:
+  deploy:
     name: Deploy API
     runs-on: ubuntu-latest
     environment: backend
@@ -48,7 +48,7 @@ jobs:
       run: |-
         docker build \
           --tag "us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/ar-backend/${{ env.IMAGE }}:latest" \
-          .
+          ./api
 
     - name: Publish
       run: |-
