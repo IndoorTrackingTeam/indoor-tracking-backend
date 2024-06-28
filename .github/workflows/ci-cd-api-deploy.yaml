@@ -64,7 +64,7 @@ jobs:
         --cpu=$CPU \
         --port=$PORT \
         --memory=$MEMORY 
-        --region $REGION \
+        --region=$REGION \
         --timeout=$TIMEOUT \
         --concurrency=$CONCURRENCY \
         --min-instances=$MIN_INSTANCES \
