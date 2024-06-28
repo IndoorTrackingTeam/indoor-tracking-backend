@@ -1,11 +1,6 @@
 import pymongo
-from dotenv import load_dotenv
 import os
 
-# Carregar variáveis de ambiente do arquivo .env
-load_dotenv()
-
-#classe Database, que fará a conexão com o MongoDB 
 class Database:
     def __init__(self, collection):
         database = 'indoor_db'

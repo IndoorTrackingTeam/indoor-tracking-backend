@@ -7,15 +7,15 @@ on:
 
 env:
   IMAGE: api
-#  PORT: 8080
-#  REGION: us-east1
-#  CPU: 1
-#  MEMORY: 512Mi
-#  TIMEOUT: 300
-#  CONCURRENCY: 80
-#  MAX_INSTANCES: 1
-#  MIN_INSTANCES: 0
-#  SECRET: ${{ secrets.SECRET }}
+  PORT: 8000
+  REGION: us-east1
+  CPU: 1
+  MEMORY: 128Mi
+  TIMEOUT: 300
+  CONCURRENCY: 80
+  MAX_INSTANCES: 1
+  MIN_INSTANCES: 0
+  SECRET: ${{ secrets.SECRET }}
 
 jobs:
   deploy:
@@ -54,20 +54,20 @@ jobs:
       run: |-
         docker push "us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/ar-backend/${{ env.IMAGE }}:latest"
 
-#    - name: Deploy
-#      run: |
-#        gcloud run deploy run-${{ env.IMAGE }} \
-#        --image us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/ar-dev-faas/${{ env.IMAGE }}:latest \
-#        --port=$PORT \
-#        --platform managed \
-#        --vpc-egress=all-traffic \
-#        --vpc-connector=projects/prj-4i-network-nprd/locations/us-east1/connectors/vpc-con-4i-nprod-cloudrun \
-#        --project ${{ secrets.GCP_PROJECT }} \
-#        --region $REGION \
-#        --set-env-vars=SECRET=$SECRET \
-#        --timeout=$TIMEOUT \
-#        --concurrency=$CONCURRENCY \
-#        --min-instances=$MIN_INSTANCES \
-#        --max-instances=$MAX_INSTANCES \
-#        --cpu=$CPU \
-#        --memory=$MEMORY 
+    - name: Deploy
+      run: |
+        gcloud run deploy run-${{ env.IMAGE }} \
+        --image us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/ar-dev-faas/${{ env.IMAGE }}:latest \
+        --platform managed \
+        --allow-unauthenticated \
+        --vpc-egress=all-traffic \
+        --cpu=$CPU \
+        --port=$PORT \
+        --memory=$MEMORY 
+        --region $REGION \
+        --timeout=$TIMEOUT \
+        --concurrency=$CONCURRENCY \
+        --min-instances=$MIN_INSTANCES \
+        --max-instances=$MAX_INSTANCES \
+        --set-env-vars=DB_USER=$DB_USER \
+        --set-env-vars=DB_PASSWORD=$DB_PASSWORD
