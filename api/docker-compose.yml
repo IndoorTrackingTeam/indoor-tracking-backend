@@ -8,8 +8,8 @@ services:
     ports:
       - 8000:8000
     environment:
-      - DB_USER=root
-      - DB_PASSWORD=root
+      - DB_USER
+      - DB_PASSWORD
 
 networks:
   api-network:
