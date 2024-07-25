@@ -1,5 +1,6 @@
-from typing import Annotated, Optional
+from typing import Annotated, List, Optional
 from pydantic import BaseModel, BeforeValidator, Field, ConfigDict
+from fastapi import UploadFile, File
 from datetime import datetime
 
 # Represents an ObjectId field in the database.
@@ -42,6 +43,10 @@ class UserAdmin(BaseModel):
     email: str = Field(...)
     isAdmin: bool = Field(default=False)
 
+class UserPhoto(BaseModel):
+    email: str = Field(...)
+    image: UploadFile = File(...)
+
 class EquipmentBase(BaseModel):
     name: str = Field(...)
     register_: str = Field(alias="register")
@@ -49,13 +54,20 @@ class EquipmentBase(BaseModel):
     c_room: str = Field(...)
     c_date: datetime = Field(...)
 
-class EquipmentHistory(BaseModel):
-    start_date: datetime = Field(...)
+class EquipmentHistoric(BaseModel):
+    initial_date: datetime = Field(...)
     room: str = Field(...)
 
 class Equipment(EquipmentBase):
-    history: EquipmentHistory = Field(...)
+    historic: Optional[List[EquipmentHistoric]] = Field(...)
     esp_id: Optional[str] = Field(...)
+
+class AllEquipmentsHistoric(BaseModel):
+    name: str = Field(...)
+    historic: Optional[List[EquipmentHistoric]] = Field(...)
+
+
+
 
 
 class Equipment_maintenance(BaseModel):
