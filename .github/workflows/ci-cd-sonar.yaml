@@ -1,6 +1,13 @@
 name: Build scan Sonar
 
 on:
+  workflow_dispatch:
+    inputs:
+      manual_deploy:
+        description: "Manual Deploy"
+        required: true
+        type: boolean
+        default: true
   push:
     branches:
       - main
@@ -12,11 +19,12 @@ jobs:
   sonarcloud:
     name: SonarCloud
     runs-on: ubuntu-latest
-    environment: backend
+    environment: frontend
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+          
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
