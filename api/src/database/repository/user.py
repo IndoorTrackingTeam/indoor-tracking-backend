@@ -1,100 +1,86 @@
-from src.database.connection_db import Database
+from src.models import UserBase, Login, UserAdmin
+from src.database.config_db import Database
 import json
 from bson import json_util 
-# import attr
 
 class UserDAO: # DAO - Data Access Object
     def __init__(self):
-        self.db = Database(collection="user")
+        self.db = Database(collection='user')
 
-    def get_all(self):
+    def get_all_users(self):
         try:
-            res = self.db.collection.find()
-            # print("total users: ", res)
+            result = self.db.collection.find()
+            data_json = json.loads(json_util.dumps(result))
 
-            parsed_json = json.loads(json_util.dumps(res))
-
-            return parsed_json
+            return data_json
         except Exception as e:
-            print(f"Houve um erro ao tentar pegar os usuários: {e}")
+            print(f'There was an error when trying to get users: {e}')
             return None
         
-    def get_user_by_register(self, register):
+    def create_user(self, new_user: UserBase):
         try:
-            res = self.db.collection.find_one({"registration": register})
-
-            return res
+            user_data = new_user.model_dump(by_alias=True)
+            user_data['isAdmin'] = False
+            result = self.db.collection.insert_one(user_data)
+            
+            return result.acknowledged
         except Exception as e:
+            print(f'There was an error when trying to create a new user: {e}')
             return None
-
         
-    def create_user(self, new_user):
+    def get_user_by_email(self, email):
         try:
+            result = self.db.collection.find_one({'email': email})
 
-            # if self.db.collection.find_one({"registration": new_user.register_}) != None:
-            #     return {"error": "Usuário existente"}
-            
-            user_json = {"name": new_user.name,
-                         "email": new_user.email,
-                         "password": new_user.password,
-                         "registration": new_user.register_,
-                         "isAdmin": False}
-            res = self.db.collection.insert_one(user_json)
-            
-            return True
+            return result
         except Exception as e:
-            print(f"Houve um erro ao tentar pegar os usuários: {e}")
+            print(f'There was an error when trying to get user: {e}')
             return None
 
-    def login_authentication(self, email, password):
+    def login_authentication(self, user_login: Login):
         try:
-            res = self.db.collection.find_one({"email": email, "password": password})
-            
-            parsed_json = json.loads(json_util.dumps(res))
+            result = self.db.collection.find_one(user_login.model_dump())
+            data_json = json.loads(json_util.dumps(result))
 
-            return parsed_json
+            return data_json
         except Exception as e:
-            print(f"Houve um erro ao tentar pegar os usuários: {e}")
+            print(f'There was an error trying to authenticate the user: {e}')
             return None
     
-    def change_admin(self, register, is_admin):
+    def change_admin(self, user_admin: UserAdmin):
         try:
-            res = self.db.collection.update_one({"registration": register}, {"$set": {"isAdmin": is_admin}})
-            print(res.raw_result['updatedExisting'])
+            result = self.db.collection.update_one({'email': user_admin.email}, {'$set': {'isAdmin': user_admin.isAdmin}})
 
-            return res.raw_result['updatedExisting']
-        except Exception as e:
-            print(f"Houve um erro ao tentar pegar os usuários: {e}")
-            return None
-    
-    def delete_user(self, register):
-        try:
-            res = self.db.collection.delete_one({"registration": register})
-            print("res: ", res.deleted_count)
-
-            if res.deleted_count == 0:
+            if result.modified_count == 0:
                 return False
             else:
                 return True
         except Exception as e:
-            print(f"Houve um erro ao tentar pegar os usuários: {e}")
+            print(f'There was an error trying to change user: {e}')
             return None
-        
-    def update_user(self, data_user):
+    
+    def delete_user(self, email):
         try:
-            res = self.db.collection.update_one({"registration": data_user.register_}, {"$set":  {"name": data_user.name,
-                         "email": data_user.email,
-                         "password": data_user.password}})
-            print("res: ", res)
-            print("res match: ", res.matched_count)
-            print("res modified: ", res.modified_count)
+            result = self.db.collection.delete_one({'email': email})
 
-            if res.matched_count == 0:
+            if result.deleted_count == 0:
                 return False
             else:
                 return True
         except Exception as e:
-            print(f"Houve um erro ao tentar pegar os usuários: {e}")
+            print(f'There was an error when trying to delete the user: {e}')
+            return None
+        
+    def update_user(self, data_user: UserBase):
+        try:
+            result = self.db.collection.update_one({'email': data_user.email}, {'$set':  data_user.model_dump()})
+
+            if result.modified_count == 0:
+                return False
+            else:
+                return True
+        except Exception as e:
+            print(f'There was an error when trying to the update user: {e}')
             return None
         
     
