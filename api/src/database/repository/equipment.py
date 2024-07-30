@@ -2,7 +2,7 @@ from src.database.config_db import Database
 from datetime import datetime
 import json
 from bson import json_util
-from src.models import EquipmentBase
+from src.models import EquipmentBase, EquipmentMaintenance
 
 class EquipmentDAO: # DAO - Data Access Object
     def __init__(self):
@@ -10,22 +10,22 @@ class EquipmentDAO: # DAO - Data Access Object
 
     def get_all(self):
         try:
-            res = self.db.collection.find({}, {'_id': 0, 'name': 1,'register': 1, 'maintenance': 1, 'c_room': 1, 'c_date': 1} )
+            res = self.db.collection.find({}, {'_id': 0, 'name': 1,'register': 1, 'maintenance': 1, 'c_room': 1, 'c_date': 1, 'esp_id': 1} )
 
             parsed_json = json.loads(json_util.dumps(res))
             return parsed_json
         
         except Exception as e:
-            print(f'Houve um erro ao tentar pegar os equipamentos: {e}')
+            print(f'There was an error trying to get the equipment: {e}')
             return None
     
     def create(self, new_equipment: EquipmentBase):
         try:
-            result = self.db.collection.insert_one(new_equipment.model_dump())
+            result = self.db.collection.insert_one(new_equipment.model_dump(by_alias=True))
             
             return result.acknowledged
         except Exception as e:
-            print(f'Houve um erro ao tentar pegar os equipamentos: {e}')
+            print(f'There was an error trying to create the equipment: {e}')
             return None
 
     def read_one(self, register):
@@ -37,6 +37,7 @@ class EquipmentDAO: # DAO - Data Access Object
 
             return parsed_json
         except Exception as e:
+            print(f'There was an error trying to get the equipment: {e}')
             return False
         
     def get_equipments_by_current_room(self, current_room):
@@ -48,63 +49,67 @@ class EquipmentDAO: # DAO - Data Access Object
 
             return parsed_json
         except Exception as e:
+            print(f'There was an error trying to get the equipment by current room: {e}')
             return False
         
-    def update(self, data_equipment):
-        try:
-            res = self.db.collection.update_one({'register_': data_equipment.register_}, {'$set':  {'name': data_equipment.name, 'last_maintenance': data_equipment.last_maintenance, 'next_maintenance': data_equipment.next_maintenance}})
+    # def update(self, data_equipment):
+    #     try:
+    #         res = self.db.collection.update_one({'register_': data_equipment.register_}, {'$set':  {'name': data_equipment.name, 'last_maintenance': data_equipment.last_maintenance, 'next_maintenance': data_equipment.next_maintenance}})
 
-            if res.matched_count == 0:
-                return False
-            else:
-                return True
-        except Exception as e:
-            print(f'Houve um erro ao tentar pegar os equipamentos: {e}')
-            return None
+    #         if res.matched_count == 0:
+    #             return False
+    #         else:
+    #             return True
+    #     except Exception as e:
+    #         print(f'Houve um erro ao tentar pegar os equipamentos: {e}')
+    #         return None
         
     def delete(self, register_):
         try:
-            res = self.db.collection.delete_one({'register_': register_})
+            res = self.db.collection.delete_one({'register': register_})
 
             if res.deleted_count == 0:
                 return False
             else:
                 return True
         except Exception as e:
-            print(f'Houve um erro ao tentar pegar os equipamentos: {e}')
+            print(f'There was an error trying to delete the equipment: {e}')
             return None
         
     def get_historic(self):
         try:
-            res = self.db.collection.find({}, {'_id': 0, 'name': 1,'register_': 1, 'historic': 1})
+            res = self.db.collection.find({}, {'_id': 0, 'name': 1,'register': 1, 'historic': 1})
 
             parsed_json = json.loads(json_util.dumps(res))
             
             return parsed_json
         except Exception as e:
-            print(f'Houve um erro ao tentar pegar os equipamentos: {e}')
+            print(f'There was an error trying to get the equipment: {e}')
             return None
         
-    def update_maintenance(self, data_equipment):
+    def update_maintenance(self, data_equipment: EquipmentMaintenance):
         try:
-            res = self.db.collection.update_one({'register_': data_equipment.register_}, {'$set':  {'maintenance': data_equipment.maintenance}})
-
+            res = self.db.collection.update_one({'register': data_equipment.register_}, {'$set':  {'maintenance': data_equipment.maintenance}})
 
             if res.matched_count == 0:
                 return False
             else:
                 return True
         except Exception as e:
-            print(f'Houve um erro ao tentar atualizar o manutenção: {e}')
+            print(f'There was an error trying to update equipment maintenance: {e}')
             return None
 
     def get_current_room_and_date(self, esp_id):
         try:
-            res = self.db.collection.find_one({'esp_id': esp_id},  {'_id': 0, 'name': 1, 'register_': 1,  'current_room': 1, 'current_date': 1})
+            res = self.db.collection.find_one({'esp_id': esp_id},  {'_id': 0, 'name': 1, 'register': 1,  'c_room': 1, 'c_date': 1})
             # print('one equipment: ', res['current_room'])
+            parsed_json = json.loads(json_util.dumps(res))
+            
+            # print('one equipment: ', res)
 
-            return res
+            return parsed_json
         except Exception as e:
+            print(f'There was an error trying to get equipment: {e}')
             raise e
         
     def update_historic(self, esp_id, room, date):

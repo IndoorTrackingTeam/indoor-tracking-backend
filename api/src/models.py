@@ -47,12 +47,14 @@ class UserPhoto(BaseModel):
     email: str = Field(...)
     image: UploadFile = File(...)
 
+
 class EquipmentBase(BaseModel):
     name: str = Field(...)
     register_: str = Field(alias="register")
     maintenance: bool = Field(default=False)
     c_room: str = Field(...)
     c_date: datetime = Field(...)
+    esp_id: str = Field(...)
 
 class EquipmentHistoric(BaseModel):
     initial_date: datetime = Field(...)
@@ -64,17 +66,23 @@ class Equipment(EquipmentBase):
 
 class AllEquipmentsHistoric(BaseModel):
     name: str = Field(...)
+    register_: str = Field(alias="register")
     historic: Optional[List[EquipmentHistoric]] = Field(...)
 
+class EquipmentMaintenance(BaseModel):
+    register_: str = Field(alias="register")
+    maintenance: bool = Field(default=False)
+
+class EquipmentCurrentDateAndRoom(BaseModel):
+    name: str = Field(...)
+    register_: str = Field(alias="register")
+    c_room: str = Field(...)
+    c_date: datetime = Field(...)
 
 
 
 
-class Equipment_maintenance(BaseModel):
-    patrimonio: str
-    name: str
-    last_maintenance: datetime
-    next_maintenance: datetime
+
 
 class Equipment_update(BaseModel):
     patrimonio: str

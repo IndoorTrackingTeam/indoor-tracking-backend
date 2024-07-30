@@ -1,7 +1,7 @@
 from typing import List
 from fastapi import APIRouter, status, HTTPException, Body
 from src.database.repository.equipment import EquipmentDAO
-from src.models import Message, EquipmentBase, Equipment, Equipment_update, Equipment_maintenance, AllEquipmentsHistoric
+from src.models import Message, EquipmentBase, Equipment, Equipment_update, EquipmentMaintenance, AllEquipmentsHistoric, EquipmentCurrentDateAndRoom
 from src.utils import convert_mongo_document
 
 router = APIRouter()
@@ -57,7 +57,7 @@ def history_equipment():
 
     return [convert_mongo_document(equipment) for equipment in historic]
 
-@router.get("/get-equipments-by-current-room", status_code=status.HTTP_200_OK, response_description='Get equipments historic', response_model=List[Equipment])
+@router.get("/get-equipments-by-current-room", status_code=status.HTTP_200_OK, response_description='Get specific equipment', response_model=List[Equipment])
 def read_equipments_by_current_room(current_room: str):
     equipmentDAO = EquipmentDAO()
     equipments = equipmentDAO.get_equipments_by_current_room(current_room)
@@ -66,24 +66,11 @@ def read_equipments_by_current_room(current_room: str):
         raise HTTPException(status_code=404, detail="There is no equipment in this room")
     if equipments == False:
         raise HTTPException(status_code=500)
-    
 
     return [convert_mongo_document(equipment) for equipment in equipments]
 
-@router.put("/update", status_code=status.HTTP_200_OK)
-def update_equipment(update_data: Equipment_update):
-    equipmentDAO = EquipmentDAO()
-    update_status = equipmentDAO.update(update_data)
-
-    if update_status == False:
-        raise HTTPException(status_code=404, detail="No equipment found")
-    elif update_status == None:
-        raise HTTPException(status_code=500)
-    
-    return update_status
-
-@router.put("/update-maintenance", status_code=status.HTTP_200_OK)
-def update_maintenante_equipment(update_data: Equipment_maintenance):
+@router.put("/update-maintenance", status_code=status.HTTP_200_OK, response_description='Updates equipment maintenance', response_model=Message)
+def update_maintenante_equipment(update_data: EquipmentMaintenance):
     equipmentDAO = EquipmentDAO()
     update_status = equipmentDAO.update_maintenance(update_data)
 
@@ -92,16 +79,30 @@ def update_maintenante_equipment(update_data: Equipment_maintenance):
     elif update_status == None:
         raise HTTPException(status_code=500)
 
-    return update_status
+    return Message(message='Equipment updated successfully')
 
-@router.delete("/delete", status_code=status.HTTP_200_OK)
-def delete_equipment(patrimonio: str):
+@router.delete("/delete", status_code=status.HTTP_200_OK, response_description='Delete equipment', response_model=Message)
+def delete_equipment(register_: str):
     equipmentDAO = EquipmentDAO()
-    status = equipmentDAO.delete(patrimonio)
+    status = equipmentDAO.delete(register_)
 
     if status == False:
         raise HTTPException(status_code=404, detail="Equipment not found")
     elif status == None:        
         raise HTTPException(status_code=500)
     
-    return status
+    return Message(message='Equipment deleted successfully')
+
+@router.get("/get-equipments-current-room-and-date", status_code=status.HTTP_200_OK, response_description='Get equipment\'s current room and date', response_model=EquipmentCurrentDateAndRoom)
+def get_equipment_current_room_and_date_by_esp_id(esp_id: str):
+    equipmentDAO = EquipmentDAO()
+    equipment = equipmentDAO.get_current_room_and_date(esp_id)
+
+    if equipment == None:
+        raise HTTPException(status_code=404, detail="Equipment not found")
+    if equipment == False:
+        raise HTTPException(status_code=500)
+
+    equipment = convert_mongo_document(equipment)
+
+    return equipment
