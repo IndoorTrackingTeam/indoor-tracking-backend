@@ -1,7 +1,9 @@
+import base64
 from typing import List
-from fastapi import APIRouter, status, HTTPException, Body
+from fastapi import APIRouter, File, Form, UploadFile, status, HTTPException, Body
+from pydantic import Field
 from src.database.repository.user import UserDAO
-from src.models import UserBase, Login, UserAdmin, Message, UserData, UsersDataList
+from src.models import UserBase, Login, UserAdmin, Message, UserData, UsersDataList, UserPhoto
 
 router = APIRouter()
 
@@ -75,3 +77,22 @@ def update_user(update_user: UserBase):
         raise HTTPException(status_code=500)
     
     return Message(message='User updated successfully')
+
+# @router.post("/upload-photo/")
+# # async def upload_image(update_photo: UserPhoto):
+# async def upload_image(email: str = Form(...), image_: UploadFile = File(...)):
+#     if image_.content_type not in ["image/jpeg", "image/png"]:
+#         raise HTTPException(status_code=400, detail="Invalid image format")
+     
+#     userDAO = UserDAO
+#     # Ler o arquivo de imagem
+#     # image.filename = "teste.jpg"
+#     image_data = await image_.read()
+#     encoded_contents = base64.b64encode(image_data)
+
+#     filename_ = image_.filename
+#     print(f'File name: {filename_}')
+
+#     status = await userDAO.update_photo(email, encoded_contents)
+
+#     return Message(message='Image uploaded successfully')
