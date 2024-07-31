@@ -1,7 +1,8 @@
-from src.models import UserBase, Login, UserAdmin
+from src.models import UserBase, Login, UserAdmin, UserPhoto
 from src.database.config_db import Database
 import json
 from bson import json_util 
+import gridfs
 
 class UserDAO: # DAO - Data Access Object
     def __init__(self):
@@ -83,5 +84,12 @@ class UserDAO: # DAO - Data Access Object
             print(f'There was an error when trying to the update user: {e}')
             return None
         
+    # async def update_photo(self, email, encoded_contents):
+    #     try:
+    #         result = await self.db.collection.update_one({'email': email}, {'$set':  {'profile_image': encoded_contents.decode('utf-8')}})
+
+    #     except Exception as e:
+    #         print(f'There was an error when trying to the update user: {e}')
+    #         return None
     
     
