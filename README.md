@@ -1,3 +1,18 @@
+# Indoor Tracking
+
+<p align="center">
+  <img src="assets/logo.png" alt="Logo" width="300" height="300">
+</p>
+
+<p align="center">
+  <a href="https://sonarcloud.io/summary/new_code?id=PedroPereiraGuimaraes_tcc-indoor-tracking-backend">
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=PedroPereiraGuimaraes_tcc-indoor-tracking-backend&metric=alert_status" alt="Quality Gate Status">
+  </a>
+  <a href="https://sonarcloud.io/summary/new_code?id=PedroPereiraGuimaraes_tcc-indoor-tracking-backend">
+    <img src="https://sonarcloud.io/api/project_badges/measure?project=PedroPereiraGuimaraes_tcc-indoor-tracking-backend&metric=bugs" alt="Bugs">
+  </a>
+</p>
+
 # Padrões de Commits
 
 Este repositório segue uma convenção de commits para manter um histórico claro e consistente. Abaixo está uma tabela com os tipos de commits e suas descrições.
