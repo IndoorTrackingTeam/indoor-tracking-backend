@@ -1,6 +1,7 @@
 import base64
 from typing import List
 from fastapi import APIRouter, File, Form, UploadFile, status, HTTPException, Body
+from fastapi.responses import JSONResponse
 from pydantic import Field
 from src.database.repository.user import UserDAO
 from src.models import UserBase, Login, UserAdmin, Message, UserData, UsersDataList, UserPhoto
@@ -31,16 +32,28 @@ def create_new_user(new_user: UserBase = Body(...)):
 
     return Message(message='User created successfully')
 
-
 @router.post('/login', status_code=status.HTTP_200_OK, response_description='Login authentication', response_model=UserData)
-def login(user_login:Login):
+def login(user_login: Login):
     userDAO = UserDAO()
-    user_login = userDAO.login_authentication(user_login)
+    auth_result = userDAO.login_authentication(user_login)
 
-    if user_login == None:
-        raise HTTPException(status_code=401, detail='Login not found')
-    
-    return user_login
+    if auth_result == "email_not_found":
+        return JSONResponse(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            content={"message": "Invalid login", "param": "email"}
+        )
+
+    if auth_result == "incorrect_password":
+        return JSONResponse(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            content={"message": "Invalid login", "param": "password"}
+        )
+
+    if auth_result is None:
+        raise HTTPException(status_code=500, detail='Internal server error')
+
+    return auth_result
+
 
 @router.post('/change-user-admin', status_code=status.HTTP_200_OK, response_description='Change user authorizations (administrator)', response_model=Message)
 def change_admin(new_user_admin:UserAdmin):

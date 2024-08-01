@@ -2,7 +2,7 @@ from src.database.config_db import Database
 from datetime import datetime
 import json
 from bson import json_util
-from src.models import EquipmentBase, EquipmentMaintenance
+from src.models import EquipmentBase, EquipmentMaintenance, UpdateEquipmentsHistoric, UpdateEquipmentsCurrentRoom
 
 class EquipmentDAO: # DAO - Data Access Object
     def __init__(self):
@@ -110,28 +110,37 @@ class EquipmentDAO: # DAO - Data Access Object
             return parsed_json
         except Exception as e:
             print(f'There was an error trying to get equipment: {e}')
-            raise e
+            return None
         
-    def update_historic(self, esp_id, room, date):
+        
+    def update_historic(self, equipment_data: UpdateEquipmentsHistoric):
         try:
             new_data = {
-                'room': room,
-                'inicial_date': date,
+                'room': equipment_data.room,
+                'initial_date': equipment_data.date,
             }
-            res = self.db.collection.update_one({'esp_id': esp_id}, {'$push': {'historic': new_data}})
-            print('one equipment: ', res)
+            res = self.db.collection.update_one({'esp_id': equipment_data.esp_id}, {'$push': {'historic': new_data}})
 
-            return res
+            if res.matched_count == 0:
+                return False
+            else:
+                return True
         except Exception as e:
-            raise e
+            print(f'There was an error trying to update equipment maintenance: {e}')
+            return None
+        
     
-    def update_current_room(self, esp_id, room):
+    def update_current_room(self, equipment_data: UpdateEquipmentsCurrentRoom):
         try:
             date = datetime.now()
             
-            res = self.db.collection.update_one({'esp_id': esp_id},{'$set': {'current_room': room, 'current_date': date}})
-            print('one equipment type: ', type(res))
+            res = self.db.collection.update_one({'esp_id': equipment_data.esp_id},{'$set': {'c_room': equipment_data.room, 'c_date': date}})
 
-            return res
+            if res.matched_count == 0:
+                return False
+            else:
+                return True
         except Exception as e:
-            raise e
+            print(f'There was an error trying to update equipment\'s current room: {e}')
+            return None
+        
