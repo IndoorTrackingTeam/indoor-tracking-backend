@@ -1,7 +1,7 @@
 from typing import List
 from fastapi import APIRouter, status, HTTPException, Body
 from src.database.repository.equipment import EquipmentDAO
-from src.models import Message, EquipmentBase, Equipment, Equipment_update, EquipmentMaintenance, AllEquipmentsHistoric, EquipmentCurrentDateAndRoom
+from src.models import Message, EquipmentBase, Equipment, EquipmentMaintenance, AllEquipmentsHistoric, EquipmentCurrentDateAndRoom, UpdateEquipmentsHistoric, UpdateEquipmentsCurrentRoom
 from src.utils import convert_mongo_document
 
 router = APIRouter()
@@ -106,3 +106,27 @@ def get_equipment_current_room_and_date_by_esp_id(esp_id: str):
     equipment = convert_mongo_document(equipment)
 
     return equipment
+
+@router.put("/update-historic", status_code=status.HTTP_200_OK, response_description='Updates equipment\'s historic', response_model=Message)
+def update_historic(update_data: UpdateEquipmentsHistoric):
+    equipmentDAO = EquipmentDAO()
+    update_status = equipmentDAO.update_historic(update_data)
+
+    if update_status == False:
+        raise HTTPException(status_code=404, detail="No equipment found")
+    elif update_status == None:
+        raise HTTPException(status_code=500)
+
+    return Message(message='Equipment updated successfully')
+
+@router.put("/update-current-room", status_code=status.HTTP_200_OK, response_description='Updates equipment\'s current room', response_model=Message)
+def update_current_room(update_data: UpdateEquipmentsCurrentRoom):
+    equipmentDAO = EquipmentDAO()
+    update_status = equipmentDAO.update_current_room(update_data)
+
+    if update_status == False:
+        raise HTTPException(status_code=404, detail="No equipment found")
+    elif update_status == None:
+        raise HTTPException(status_code=500)
+
+    return Message(message='Equipment updated successfully')

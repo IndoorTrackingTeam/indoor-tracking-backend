@@ -52,6 +52,8 @@ class EquipmentBase(BaseModel):
     name: str = Field(...)
     register_: str = Field(alias="register")
     maintenance: bool = Field(default=False)
+    last_maintenance: Optional[datetime] = Field(default=None)
+    next_maintenance: Optional[datetime] = Field(default=None)
     c_room: str = Field(...)
     c_date: datetime = Field(...)
     esp_id: str = Field(...)
@@ -61,13 +63,13 @@ class EquipmentHistoric(BaseModel):
     room: str = Field(...)
 
 class Equipment(EquipmentBase):
-    historic: Optional[List[EquipmentHistoric]] = Field(...)
-    esp_id: Optional[str] = Field(...)
+    historic: Optional[List[EquipmentHistoric]] = Field(default=None)
+    esp_id: Optional[str] = Field(default=None)
 
 class AllEquipmentsHistoric(BaseModel):
     name: str = Field(...)
     register_: str = Field(alias="register")
-    historic: Optional[List[EquipmentHistoric]] = Field(...)
+    historic: Optional[List[EquipmentHistoric]] = Field(default=None)
 
 class EquipmentMaintenance(BaseModel):
     register_: str = Field(alias="register")
@@ -79,13 +81,11 @@ class EquipmentCurrentDateAndRoom(BaseModel):
     c_room: str = Field(...)
     c_date: datetime = Field(...)
 
+class UpdateEquipmentsHistoric(BaseModel):
+    esp_id: str = Field(...)
+    room: str = Field(...)
+    date: datetime = Field(...)
 
-
-
-
-
-class Equipment_update(BaseModel):
-    patrimonio: str
-    name: str
-    last_maintenance: datetime
-    next_maintenance: datetime
+class UpdateEquipmentsCurrentRoom(BaseModel):
+    esp_id: str = Field(...)
+    room: str = Field(...)

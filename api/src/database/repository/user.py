@@ -40,10 +40,16 @@ class UserDAO: # DAO - Data Access Object
 
     def login_authentication(self, user_login: Login):
         try:
-            result = self.db.collection.find_one(user_login.model_dump())
-            data_json = json.loads(json_util.dumps(result))
+            user_data = self.db.collection.find_one({"email": user_login.email})
+            if not user_data:
+                return "email_not_found"
 
+            if user_data["password"] != user_login.password:
+                return "incorrect_password"
+
+            data_json = json.loads(json_util.dumps(user_data))
             return data_json
+
         except Exception as e:
             print(f'There was an error trying to authenticate the user: {e}')
             return None
