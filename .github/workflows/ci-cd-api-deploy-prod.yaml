@@ -1,4 +1,4 @@
-name: Build deploy API
+name: Build deploy API PROD
 
 on:
   workflow_dispatch:
@@ -55,17 +55,17 @@ jobs:
     - name: Build
       run: |-
         docker build \
-          --tag "us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/ar-backend/${{ env.IMAGE }}:latest" \
+          --tag "us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/ar-backend/${{ env.IMAGE }}-prod:latest" \
           ./api
 
     - name: Publish
       run: |-
-        docker push "us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/ar-backend/${{ env.IMAGE }}:latest"
+        docker push "us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/ar-backend/${{ env.IMAGE }}-prod:latest"
 
     - name: Deploy
       run: |
-        gcloud run deploy run-${{ env.IMAGE }} \
-        --image us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/ar-backend/${{ env.IMAGE }}:latest \
+        gcloud run deploy run-${{ env.IMAGE }}-prod \
+        --image us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/ar-backend/${{ env.IMAGE }}-prod:latest \
         --platform managed \
         --allow-unauthenticated \
         --cpu=$CPU \
