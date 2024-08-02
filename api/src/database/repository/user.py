@@ -47,7 +47,7 @@ class UserDAO: # DAO - Data Access Object
             if user_data["password"] != user_login.password:
                 return "incorrect_password"
 
-            data_json = user_login.id.$oid
+            data_json = json.loads(json_util.dumps(user_data))
             return data_json
 
         except Exception as e:
