@@ -22,8 +22,8 @@ env:
   CONCURRENCY: 80
   MAX_INSTANCES: 1
   MIN_INSTANCES: 0
-  DB_USER: ${{ secrets.DB_USER }}
-  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+  DB_URL: ${{ secrets.DB_URL }}
+  ENV_QA: ${{ secrets.ENV_QA }}
 
 jobs:
   deploy:
@@ -76,5 +76,5 @@ jobs:
         --concurrency=$CONCURRENCY \
         --min-instances=$MIN_INSTANCES \
         --max-instances=$MAX_INSTANCES \
-        --set-env-vars=DB_USER=$DB_USER \
-        --set-env-vars=DB_PASSWORD=$DB_PASSWORD
+        --set-env-vars=DB_URL=$DB_URL \
+        --set-env-vars=ENV_QA=$ENV_QA
