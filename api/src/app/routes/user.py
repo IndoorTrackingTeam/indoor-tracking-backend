@@ -4,7 +4,7 @@ from fastapi import APIRouter, File, Form, UploadFile, status, HTTPException, Bo
 from fastapi.responses import JSONResponse
 from pydantic import Field
 from src.database.repository.user import UserDAO
-from src.models import UserBase, Login, UserAdmin, Message, UserData, UsersDataList, UserPhoto
+from src.models import UserBase, Login, UserAdmin, Message, UserData, UserPhoto
 
 router = APIRouter()
 
@@ -16,7 +16,7 @@ def get_all_users():
     if users == None:
         raise HTTPException(status_code=500)
 
-    return users ########## Qual é melhor List[UserData] ou UsersDataList?
+    return users
 
 @router.post('/create', status_code=status.HTTP_201_CREATED, response_description='Create a new user', response_model=Message)
 def create_new_user(new_user: UserBase = Body(...)):

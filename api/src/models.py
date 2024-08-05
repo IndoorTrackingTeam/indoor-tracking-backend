@@ -29,11 +29,8 @@ class UserBase(BaseModel):
     # )
 
 class UserData(UserBase):
-    # id: Optional[PyObjectId] = Field(alias="_id", default=None)
+    id: Optional[PyObjectId] = Field(alias="_id", default=None)
     isAdmin: bool = Field(default=False)
-
-class UsersDataList(BaseModel):
-    users: list[UserData]
 
 class Login(BaseModel):
     email: str = Field(...)
