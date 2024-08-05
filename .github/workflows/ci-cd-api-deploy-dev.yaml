@@ -1,0 +1,80 @@
+name: Build deploy API DEV
+
+on:
+  workflow_dispatch:
+    inputs:
+      manual_deploy:
+        description: "Manual Deploy"
+        required: true
+        type: boolean
+        default: true
+  push:
+    branches:
+      - development
+
+env:
+  IMAGE: api
+  PORT: 8000
+  REGION: us-east1
+  CPU: 1
+  MEMORY: 128Mi
+  TIMEOUT: 300
+  CONCURRENCY: 80
+  MAX_INSTANCES: 1
+  MIN_INSTANCES: 0
+  DB_URL: ${{ secrets.DB_URL }}
+  ENV_QA: ${{ secrets.ENV_QA }}
+
+jobs:
+  deploy:
+    name: Deploy API
+    runs-on: ubuntu-latest
+    environment: backend
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - uses: google-github-actions/setup-gcloud@94337306dda8180d967a56932ceb4ddcf01edae7
+      with:
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        project_id: ${{ secrets.GCP_PROJECT }}
+
+    - name: Login to GCR
+      uses: docker/login-action@v1
+      with:
+        registry: gcr.io
+        username: _json_key
+        password: ${{ secrets.GCP_SA_KEY }}
+
+    - name: Docker configuration
+      run: |-
+        gcloud auth configure-docker \
+        us-east1-docker.pkg.dev
+
+    - name: Build
+      run: |-
+        docker build \
+          --tag "us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/ar-backend/${{ env.IMAGE }}-dev:latest" \
+          ./api
+
+    - name: Publish
+      run: |-
+        docker push "us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/ar-backend/${{ env.IMAGE }}-dev:latest"
+
+    - name: Deploy
+      run: |
+        gcloud run deploy run-${{ env.IMAGE }}-dev \
+        --image us-east1-docker.pkg.dev/${{ secrets.GCP_PROJECT }}/ar-backend/${{ env.IMAGE }}-dev:latest \
+        --platform managed \
+        --allow-unauthenticated \
+        --cpu=$CPU \
+        --port=$PORT \
+        --memory=$MEMORY \
+        --region $REGION \
+        --timeout=$TIMEOUT \
+        --concurrency=$CONCURRENCY \
+        --min-instances=$MIN_INSTANCES \
+        --max-instances=$MAX_INSTANCES \
+        --set-env-vars=DB_URL=$DB_URL \
+        --set-env-vars=ENV_QA=$ENV_QA
