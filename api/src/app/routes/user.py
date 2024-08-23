@@ -18,6 +18,28 @@ def get_all_users():
 
     return users
 
+@router.get('/get-user', status_code=status.HTTP_200_OK, response_description='Get user photo')
+# response_model=UserData)
+def get_all_users(user_email: str):
+    userDAO = UserDAO()
+    users = userDAO.get_user_by_email(user_email)
+
+    if users == None:
+        raise HTTPException(status_code=500)
+
+    return users
+
+@router.get('/get-user-photo', status_code=status.HTTP_200_OK, response_description='Get user')
+# response_model=UserData)
+def get_all_users(user_email: str):
+    userDAO = UserDAO()
+    users = userDAO.get_user_photo_by_email(user_email)
+
+    if users == None:
+        raise HTTPException(status_code=500)
+
+    return users
+
 @router.post('/create', status_code=status.HTTP_201_CREATED, response_description='Create a new user', response_model=Message)
 def create_new_user(new_user: UserBase = Body(...)):
     userDAO = UserDAO()
@@ -82,14 +104,27 @@ def delete_user(user_email: str):
 @router.put('/update', status_code=status.HTTP_200_OK, response_description='Update user', response_model=Message)
 def update_user(update_user: UserBase):
     userDAO = UserDAO()
-    creation_status = userDAO.update_user(update_user)
+    status = userDAO.update_user(update_user)
 
-    if creation_status == False:
+    if status == False:
         raise HTTPException(status_code=404, detail='User not found')
-    elif creation_status == None:        
+    elif status == None:        
         raise HTTPException(status_code=500)
     
     return Message(message='User updated successfully')
+
+@router.put('/update-photo', status_code=status.HTTP_200_OK, response_description='Update user photo', response_model=Message)
+def update_user(update_user_photo: UserPhoto):
+    userDAO = UserDAO()
+    status = userDAO.update_user_photo(update_user_photo)
+
+    if status == False:
+        raise HTTPException(status_code=404, detail='User not found')
+    elif status == None:        
+        raise HTTPException(status_code=500)
+    
+    return Message(message='Image uploaded successfully')
+
 
 # @router.post("/upload-photo/")
 # # async def upload_image(update_photo: UserPhoto):

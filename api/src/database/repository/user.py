@@ -32,8 +32,19 @@ class UserDAO: # DAO - Data Access Object
     def get_user_by_email(self, email):
         try:
             result = self.db.collection.find_one({'email': email})
+            data_json = json.loads(json_util.dumps(result))
 
-            return result
+            return data_json
+        except Exception as e:
+            print(f'There was an error when trying to get user: {e}')
+            return None
+    
+    def get_user_photo_by_email(self, email):
+        try:
+            result = self.db.collection.find_one({'email': email}, {'photo': 1})
+            data_json = json.loads(json_util.dumps(result))
+
+            return data_json
         except Exception as e:
             print(f'There was an error when trying to get user: {e}')
             return None
@@ -81,6 +92,18 @@ class UserDAO: # DAO - Data Access Object
     def update_user(self, data_user: UserBase):
         try:
             result = self.db.collection.update_one({'email': data_user.email}, {'$set':  data_user.model_dump()})
+
+            if result.modified_count == 0:
+                return False
+            else:
+                return True
+        except Exception as e:
+            print(f'There was an error when trying to the update user: {e}')
+            return None
+
+    def update_user_photo(self, data_user: UserPhoto):
+        try:
+            result = self.db.collection.update_one({'email': data_user.email}, {'$set':  {'photo': data_user.image}})
 
             if result.modified_count == 0:
                 return False

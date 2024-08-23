@@ -45,7 +45,8 @@ class UserAdmin(BaseModel):
 
 class UserPhoto(BaseModel):
     email: str = Field(...)
-    image: UploadFile = File(...)
+    image: str = Field(...)
+    # image: UploadFile = File(...)
 
 
 class EquipmentBase(BaseModel):
