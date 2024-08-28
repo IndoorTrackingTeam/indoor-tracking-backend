@@ -16,21 +16,11 @@ class UserBase(BaseModel):
      name: str = Field(...)
      email: str = Field(...)
      password: str = Field(...)
-    #  model_config = ConfigDict(
-    #     # populate_by_name=True, # precisa disso?
-    #     arbitrary_types_allowed=True, # precisa disso
-    #     json_schema_extra={
-    #         "example": {"name": "Frida Gilbert",
-    #                      "email": "frida_gilbert@gmail.com",
-    #                      "password": "12345678",
-    #                      "register": "1212",
-    #                      "maintenance": False}
-    #     },
-    # )
 
 class UserData(UserBase):
     # id: Optional[PyObjectId] = Field(alias="_id", default=None)
     isAdmin: bool = Field(default=False)
+    photo: str = Field(default="")
 
 class Login(BaseModel):
     email: str = Field(...)
@@ -44,9 +34,13 @@ class UserAdmin(BaseModel):
     isAdmin: bool = Field(default=False)
 
 class UserPhoto(BaseModel):
-    email: str = Field(...)
-    image: str = Field(...)
+    email: Optional[str] = Field(default='')
+    name: Optional[str] = Field(default='')
+    photo: Optional[str] = Field(default='')
     # image: UploadFile = File(...)
+
+class UpdateUserPhoto(UserId):
+    photo: str = Field(...)
 
 
 class EquipmentBase(BaseModel):

@@ -1,7 +1,7 @@
 from src.models import UserBase, Login, UserAdmin, UserPhoto
 from src.database.config_db import Database
 import json
-from bson import json_util 
+from bson import ObjectId, json_util 
 import gridfs
 
 class UserDAO: # DAO - Data Access Object
@@ -22,6 +22,7 @@ class UserDAO: # DAO - Data Access Object
         try:
             user_data = new_user.model_dump(by_alias=True)
             user_data['isAdmin'] = False
+            # user_data['photo'] = ""
             result = self.db.collection.insert_one(user_data)
             
             return result.acknowledged
@@ -31,13 +32,23 @@ class UserDAO: # DAO - Data Access Object
         
     def get_user_by_email(self, email):
         try:
-            result = self.db.collection.find_one({'email': email})
+            result = self.db.collection.find_one({'email': email}, {'_id': 0,'email': 1, 'name': 1, 'photo':1})
             data_json = json.loads(json_util.dumps(result))
 
             return data_json
         except Exception as e:
             print(f'There was an error when trying to get user: {e}')
-            return None
+            return False
+
+    def get_user_by_id(self, id):
+        try:
+            result = self.db.collection.find_one({'_id': ObjectId(id)}, {'_id': 0,'email': 1, 'name': 1, 'photo':1})
+            data_json = json.loads(json_util.dumps(result))
+
+            return data_json
+        except Exception as e:
+            print(f'There was an error when trying to get user: {e}')
+            return False
     
     def get_user_photo_by_email(self, email):
         try:
@@ -47,7 +58,7 @@ class UserDAO: # DAO - Data Access Object
             return data_json
         except Exception as e:
             print(f'There was an error when trying to get user: {e}')
-            return None
+            return False
 
     def login_authentication(self, user_login: Login):
         try:
@@ -103,7 +114,7 @@ class UserDAO: # DAO - Data Access Object
 
     def update_user_photo(self, data_user: UserPhoto):
         try:
-            result = self.db.collection.update_one({'email': data_user.email}, {'$set':  {'photo': data_user.image}})
+            result = self.db.collection.update_one({'_id': ObjectId(data_user.id)}, {'$set':  {'photo': data_user.image}})
 
             if result.modified_count == 0:
                 return False

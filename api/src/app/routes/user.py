@@ -1,41 +1,32 @@
 import base64
-from typing import List
-from fastapi import APIRouter, File, Form, UploadFile, status, HTTPException, Body
+from typing import List, Union
+from fastapi import APIRouter, status, HTTPException, Body
 from fastapi.responses import JSONResponse
-from pydantic import Field
 from src.database.repository.user import UserDAO
-from src.models import UserBase, Login, UserAdmin, Message, UserData, UserId, UserPhoto
+from src.models import UserBase, Login, UserAdmin, Message, UserData, UserId, UserPhoto, UpdateUserPhoto
 
 router = APIRouter()
 
-@router.get('/read-all', status_code=status.HTTP_200_OK, response_description='Get all users', response_model=List[UserData])
+@router.get('/read-all', status_code=status.HTTP_200_OK, response_description='Get all users', response_model=Union[List[UserData], Message])
 def get_all_users():
     userDAO = UserDAO()
     users = userDAO.get_all_users()
 
     if users == None:
         raise HTTPException(status_code=500)
+    elif users == []:
+        return Message(message='No user was found')
 
     return users
 
-@router.get('/get-user', status_code=status.HTTP_200_OK, response_description='Get user photo')
-# response_model=UserData)
-def get_all_users(user_email: str):
+@router.get('/get-user', status_code=status.HTTP_200_OK, response_description='Get user photo', response_model=Union[UserPhoto, Message])
+def get_one_users(id: str):
     userDAO = UserDAO()
-    users = userDAO.get_user_by_email(user_email)
+    users = userDAO.get_user_by_id(id)
 
     if users == None:
-        raise HTTPException(status_code=500)
-
-    return users
-
-@router.get('/get-user-photo', status_code=status.HTTP_200_OK, response_description='Get user')
-# response_model=UserData)
-def get_all_users(user_email: str):
-    userDAO = UserDAO()
-    users = userDAO.get_user_photo_by_email(user_email)
-
-    if users == None:
+        return Message(message='No user with that email was found')
+    elif users == False:
         raise HTTPException(status_code=500)
 
     return users
@@ -85,7 +76,7 @@ def change_admin(new_user_admin:UserAdmin):
     if user_updated == False:
         raise HTTPException(status_code=404, detail='User not found')
     elif user_updated == None:
-        raise HTTPException(status_code=500, )
+        raise HTTPException(status_code=500)
 
     return Message(message='User data changed')
 
@@ -113,8 +104,8 @@ def update_user(update_user: UserBase):
     
     return Message(message='User updated successfully')
 
-@router.put('/update-photo', status_code=status.HTTP_200_OK, response_description='Update user photo', response_model=Message)
-def update_user(update_user_photo: UserPhoto):
+@router.put('/update-photo', status_code=status.HTTP_200_OK, response_description='Update user photo', response_model=Message)  
+def update_user(update_user_photo: UpdateUserPhoto):
     userDAO = UserDAO()
     status = userDAO.update_user_photo(update_user_photo)
 
