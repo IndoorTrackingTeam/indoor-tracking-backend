@@ -17,11 +17,6 @@ class UserBase(BaseModel):
      email: str = Field(...)
      password: str = Field(...)
 
-class UserData(UserBase):
-    # id: Optional[PyObjectId] = Field(alias="_id", default=None)
-    isAdmin: bool = Field(default=False)
-    photo: str = Field(default="")
-
 class Login(BaseModel):
     email: str = Field(...)
     password: str = Field(...)
@@ -33,11 +28,15 @@ class UserAdmin(BaseModel):
     email: str = Field(...)
     isAdmin: bool = Field(default=False)
 
-class UserPhoto(BaseModel):
+class UserBasicData(BaseModel):
     email: Optional[str] = Field(default='')
     name: Optional[str] = Field(default='')
     photo: Optional[str] = Field(default='')
     # image: UploadFile = File(...)
+
+class UserData(UserBasicData):
+    # id: Optional[PyObjectId] = Field(alias="_id", default=None)
+    isAdmin: bool = Field(default=False)
 
 class UpdateUserPhoto(UserId):
     photo: str = Field(...)
@@ -47,11 +46,12 @@ class EquipmentBase(BaseModel):
     name: str = Field(...)
     register_: str = Field(alias="register")
     maintenance: bool = Field(default=False)
-    last_maintenance: Optional[datetime] = Field(default=None)
-    next_maintenance: Optional[datetime] = Field(default=None)
     c_room: str = Field(...)
     c_date: datetime = Field(...)
     esp_id: str = Field(...)
+    image: Optional[str] = Field(default=None)
+    # esp_id: Optional[str] = Field(default=None)
+
 
 class EquipmentHistoric(BaseModel):
     initial_date: datetime = Field(...)
@@ -59,7 +59,6 @@ class EquipmentHistoric(BaseModel):
 
 class Equipment(EquipmentBase):
     historic: Optional[List[EquipmentHistoric]] = Field(default=None)
-    esp_id: Optional[str] = Field(default=None)
 
 class AllEquipmentsHistoric(BaseModel):
     name: str = Field(...)
@@ -79,8 +78,12 @@ class EquipmentCurrentDateAndRoom(BaseModel):
 class UpdateEquipmentsHistoric(BaseModel):
     esp_id: str = Field(...)
     room: str = Field(...)
-    date: datetime = Field(...)
+    initial_date: datetime = Field(...)
 
 class UpdateEquipmentsCurrentRoom(BaseModel):
     esp_id: str = Field(...)
-    room: str = Field(...)
+    c_room: str = Field(...)
+
+class UpdateImage(BaseModel):
+    register_: str = Field(alias="register")
+    image: str = Field(...)
