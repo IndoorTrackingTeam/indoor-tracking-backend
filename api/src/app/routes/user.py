@@ -1,9 +1,9 @@
-import base64
 from typing import List, Union
 from fastapi import APIRouter, status, HTTPException, Body
 from fastapi.responses import JSONResponse
-from src.database.repository.user import UserDAO
-from src.models import UserBase, Login, UserAdmin, Message, UserData, UserId, UserBasicData, UpdateUserPhoto
+from src.database.repositories.user_repository import UserDAO
+from src.models.user_model import UserBase, Login, UserAdmin, Message, UserData, UserId, UserBasicData, UpdateUserPhoto
+from src.utils import Message
 
 router = APIRouter()
 
