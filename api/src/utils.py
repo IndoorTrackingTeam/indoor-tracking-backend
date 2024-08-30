@@ -1,5 +1,11 @@
 from datetime import datetime
 
+from pydantic import BaseModel
+
+# Generic message model for endpoints responses
+class Message(BaseModel):
+    message: str
+    
 def parse_date(date_str):
         for fmt in ("%Y-%m-%dT%H:%M:%S.%fZ", "%Y-%m-%dT%H:%M:%SZ"):
             try:
