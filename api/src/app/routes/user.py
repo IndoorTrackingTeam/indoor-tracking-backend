@@ -2,7 +2,7 @@ from typing import List, Union
 from fastapi import APIRouter, status, HTTPException, Body
 from fastapi.responses import JSONResponse
 from src.database.repositories.user_repository import UserDAO
-from src.models.user_model import UserBase, Login, UserAdmin, Message, UserData, UserId, UserBasicData, UpdateUserPhoto
+from src.models.user_model import UserBase, Login, UserAdmin, UserData, UserId, UserBasicData, UpdateUserPhoto
 from src.utils import Message
 
 router = APIRouter()
