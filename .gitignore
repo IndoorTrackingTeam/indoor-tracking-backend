@@ -163,3 +163,9 @@ cython_debug/
 
 # vscode settings
 .vscode/
+
+**archive/
+output.json
+.DS_Store
+**pytest_html_report.html
+
