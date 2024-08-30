@@ -2,7 +2,7 @@ from src.database.config_db import Database
 from datetime import datetime
 import json
 from bson import json_util
-from src.models import EquipmentBase, EquipmentMaintenance, UpdateEquipmentsHistoric, UpdateEquipmentsCurrentRoom, UpdateImage
+from src.models.equipment_model import EquipmentBase, EquipmentMaintenance, UpdateEquipmentsHistoric, UpdateEquipmentsCurrentRoom, UpdateImage
 
 class EquipmentDAO: # DAO - Data Access Object
     def __init__(self):

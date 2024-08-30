@@ -1,4 +1,4 @@
-from src.models import UserBase, Login, UserAdmin, UserBasicData
+from src.models.user_model import UserBase, Login, UserAdmin, UserBasicData
 from src.database.config_db import Database
 import json
 from bson import ObjectId, json_util 
