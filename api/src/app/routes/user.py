@@ -3,7 +3,7 @@ from typing import List, Union
 from fastapi import APIRouter, status, HTTPException, Body
 from fastapi.responses import JSONResponse
 from src.database.repository.user import UserDAO
-from src.models import UserBase, Login, UserAdmin, Message, UserData, UserId, UserPhoto, UpdateUserPhoto
+from src.models import UserBase, Login, UserAdmin, Message, UserData, UserId, UserBasicData, UpdateUserPhoto
 
 router = APIRouter()
 
@@ -19,13 +19,13 @@ def get_all_users():
 
     return users
 
-@router.get('/get-user', status_code=status.HTTP_200_OK, response_description='Get user photo', response_model=Union[UserPhoto, Message])
+@router.get('/get-user', status_code=status.HTTP_200_OK, response_description='Get user', response_model=UserBasicData)
 def get_one_users(id: str):
     userDAO = UserDAO()
     users = userDAO.get_user_by_id(id)
 
     if users == None:
-        return Message(message='No user with that email was found')
+        raise HTTPException(status_code=404, detail="User not found")
     elif users == False:
         raise HTTPException(status_code=500)
 

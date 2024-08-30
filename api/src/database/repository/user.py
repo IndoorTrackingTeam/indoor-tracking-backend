@@ -1,4 +1,4 @@
-from src.models import UserBase, Login, UserAdmin, UserPhoto
+from src.models import UserBase, Login, UserAdmin, UserBasicData
 from src.database.config_db import Database
 import json
 from bson import ObjectId, json_util 
@@ -10,7 +10,7 @@ class UserDAO: # DAO - Data Access Object
 
     def get_all_users(self):
         try:
-            result = self.db.collection.find()
+            result = self.db.collection.find({}, {'_id': 0, 'password': 0} )
             data_json = json.loads(json_util.dumps(result))
 
             return data_json
@@ -22,7 +22,6 @@ class UserDAO: # DAO - Data Access Object
         try:
             user_data = new_user.model_dump(by_alias=True)
             user_data['isAdmin'] = False
-            # user_data['photo'] = ""
             result = self.db.collection.insert_one(user_data)
             
             return result.acknowledged
@@ -112,9 +111,9 @@ class UserDAO: # DAO - Data Access Object
             print(f'There was an error when trying to the update user: {e}')
             return None
 
-    def update_user_photo(self, data_user: UserPhoto):
+    def update_user_photo(self, data_user: UserBasicData):
         try:
-            result = self.db.collection.update_one({'_id': ObjectId(data_user.id)}, {'$set':  {'photo': data_user.image}})
+            result = self.db.collection.update_one({'_id': ObjectId(data_user.id)}, {'$set':  {'photo': data_user.photo}})
 
             if result.modified_count == 0:
                 return False
