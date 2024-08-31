@@ -29,7 +29,8 @@ jobs:
   test: 
     name: Integration Tests
     runs-on: ubuntu-latest
-    enviroment: backend
+    environment: backend
+
 
     steps:
     - name: Checkout
