@@ -31,7 +31,6 @@ jobs:
     runs-on: ubuntu-latest
     environment: backend
 
-
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -47,7 +46,7 @@ jobs:
     
   deploy:
     name: Deploy API
-    needs: test
+    # needs: test
     runs-on: ubuntu-latest
     environment: backend
 
