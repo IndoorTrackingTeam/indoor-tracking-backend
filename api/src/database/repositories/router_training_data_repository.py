@@ -7,9 +7,18 @@ class RouterTrainingDataDAO: # DAO - Data Access Object
 
     def create(self, data: RouterTrainingData):
         try:
-            result = self.db.collection.insert_one(data.model_dump())
+            result_update = self.db.collection.update_one({"name": "training data"}, {'$push': {'historic': data.model_dump()}})
+
+            if result_update.matched_count == 0:
+                new_data = {
+                    "name": "training data",
+                    "historic": [data.model_dump()]  # Inicializando 'historic' como uma lista com o objeto
+                }
+                result = self.db.collection.insert_one(new_data)
             
-            return result.acknowledged
+                return result.acknowledged
+            return result_update.acknowledged
+
         except Exception as e:
             print(f'There was an error when trying to insert new data: {e}')
             return None
