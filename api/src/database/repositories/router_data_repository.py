@@ -7,7 +7,7 @@ class RouterDataDAO: # DAO - Data Access Object
 
     def create(self, data: RouterData):
         try:
-            result = self.db.collection.update_one(data.model_dump())
+            result = self.db.collection.insert_one(data.model_dump())
             
             return result.acknowledged
         except Exception as e:
