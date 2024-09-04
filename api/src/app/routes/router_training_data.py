@@ -10,9 +10,13 @@ router = APIRouter()
 def create_training_data(data: RouterTrainingData):
     routerDataDAO = RouterTrainingDataDAO()
 
-    creation_status = routerDataDAO.create(data)
+    status = routerDataDAO.update(data)
 
-    if creation_status == None or creation_status == False:
+    print(status)
+    if status == False:
+        status = routerDataDAO.create(data)
+
+    if status == None or status == False:
         raise HTTPException(status_code=500)
     
     return Message(message='Data created successfully')

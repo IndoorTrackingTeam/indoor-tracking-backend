@@ -1,5 +1,7 @@
 from src.database.config_db import Database
 from src.models.router_data import RouterTrainingData
+from datetime import datetime
+
 
 class RouterTrainingDataDAO: # DAO - Data Access Object
     def __init__(self):
@@ -7,32 +9,44 @@ class RouterTrainingDataDAO: # DAO - Data Access Object
 
     def create(self, data: RouterTrainingData):
         try:
-            result_update = self.db.collection.update_one({"mac": data.mac}, {'$push': {'historic': {
-                            "esp_id": data.esp_id,
-                            "date": data.date,
-                            "room": data.room,
-                            "rssi": data.rssi
-                        }}})
+            # Criação da chave de data atual
+            date = datetime.now()
+            date_key = date.strftime("%Y-%m-%d %H:%M:%S")
 
-            if result_update.matched_count == 0:
-                new_data = {
-                    "mac": data.mac,
-                    "name_router": data.name_router,
-                    "historic": [
-                        {
-                            "esp_id": data.esp_id,
-                            "date": data.date,
-                            "room": data.room,
-                            "rssi": data.rssi
-                        }
-                    ]  # Inicializando 'historic' como uma lista com o objeto
+            print(date_key)
+
+            # Inserção do documento na coleção
+            result = self.db.collection.insert_one({
+                "room": data.room,
+                "date": {
+                    date_key: [network.model_dump() for network in data.networks]
                 }
-                result = self.db.collection.insert_one(new_data)
-            
-                return result.acknowledged
-            return result_update.acknowledged
+            })
+            return result.acknowledged
 
         except Exception as e:
             print(f'There was an error when trying to insert new data: {e}')
             return None
+        
+    def update(self, data: RouterTrainingData):
+        try:
+            # Criação da chave de data atual
+            date = datetime.now()
+            date_key = date.strftime("%Y-%m-%d %H:%M:%S")
+    
+            result = self.db.collection.update_one({"room": data.room}, {
+                '$push': {
+                    f'date.{date_key}': {
+                        '$each': [network.model_dump() for network in data.networks]
+                    }
+                }
+            })
+            
+            print(result.matched_count)
+            return result.matched_count >= 1
+
+        except Exception as e:
+            print(f'There was an error when trying to insert new data: {e}')
+            return None
+    
 
