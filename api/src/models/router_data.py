@@ -3,21 +3,21 @@ from typing import List, Optional
 from pydantic import BaseModel, Field
 
 
-class RouterData(BaseModel):
+class NetworksRouterTrainingData(BaseModel):
     mac: str = Field(...)
     name_router: str = Field(...)
     esp_id: str = Field(...)
     rssi: int = Field(...)
-    # date: Optional[datetime] = Field(default=datetime.now())
 
 class RouterTrainingData(BaseModel):
     room: str = Field(...)
-    networks: List[RouterData] = Field(...)
+    networks: List[NetworksRouterTrainingData] = Field(...)
 
+class NetworksRouterData(BaseModel):
+    mac: str = Field(...)
+    name_router: str = Field(...)
+    rssi: int = Field(...)
 
-# class NewRouterTrainingData(BaseModel):
-#     room: str = Field(...)
-#     date: Optional[datetime] = Field(default=datetime.now())
-#     linha
-    
-        
+class RouterData(BaseModel):
+    esp_id: str = Field(...)
+    networks: List[NetworksRouterData] = Field(...)
