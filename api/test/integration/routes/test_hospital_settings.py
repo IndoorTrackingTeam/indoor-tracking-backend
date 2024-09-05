@@ -14,10 +14,10 @@ def config_mongo():
     
 def test_create_mac_list(client: TestClient) -> None:
     body = mock.valid_mac_list()
-    response = client.post('/settings/create-macs', json=body)
+    response = client.post('/settings/create-mac-list', json=body)
     assert response.status_code == 201
 
 def test_create_mac_list_wrong_body(client: TestClient) -> None:
     body = mock.invalid_mac_list()
-    response = client.post('/settings/create-macs', json=body)
+    response = client.post('/settings/create-mac-list', json=body)
     assert response.status_code == 422
