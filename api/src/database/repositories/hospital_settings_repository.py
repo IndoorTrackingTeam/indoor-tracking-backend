@@ -18,11 +18,23 @@ class SettingsDAO: # DAO - Data Access Object
     def update_mac_list(self, macs: MacList):
         try:
             result = self.db.collection.update_one({"hospital_name": macs.hospital_name}, {
-                '$set': {'macs': macs.model_dump(exclude="hospital_name")}
+                '$set': {"macs": macs.macs}
             })
             
             return result.matched_count >= 1
         except Exception as e:
             print(f'There was an error when trying to insert new data: {e}')
             return None
+        
+    def get_mac_list(self):
+        try:
+            result = self.db.collection.find_one({}, {"macs": 1, "_id": 0})
+
+            return result.get("macs", [])
+            
+        except Exception as e:
+            print(f'There was an error when trying to insert new data: {e}')
+            return None
+        
+
     
