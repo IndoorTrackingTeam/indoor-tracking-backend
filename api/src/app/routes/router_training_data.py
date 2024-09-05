@@ -12,7 +12,6 @@ def create_training_data(data: RouterTrainingData):
 
     status = routerDataDAO.update(data)
 
-    print(status)
     if status == False:
         status = routerDataDAO.create(data)
 

@@ -6,8 +6,8 @@ from pydantic import BaseModel, Field
 class NetworksRouterTrainingData(BaseModel):
     mac: str = Field(...)
     name_router: str = Field(...)
-    esp_id: str = Field(...)
     rssi: int = Field(...)
+    esp_id: str = Field(...)
 
 class RouterTrainingData(BaseModel):
     room: str = Field(...)

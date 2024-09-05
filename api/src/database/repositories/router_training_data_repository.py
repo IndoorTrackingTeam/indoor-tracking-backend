@@ -9,13 +9,11 @@ class RouterTrainingDataDAO: # DAO - Data Access Object
 
     def create(self, data: RouterTrainingData):
         try:
-            # Criação da chave de data atual
             date = datetime.now()
             date_key = date.strftime("%Y-%m-%d %H:%M:%S")
 
             print(date_key)
 
-            # Inserção do documento na coleção
             result = self.db.collection.insert_one({
                 "room": data.room,
                 "date": {
@@ -30,7 +28,6 @@ class RouterTrainingDataDAO: # DAO - Data Access Object
         
     def update(self, data: RouterTrainingData):
         try:
-            # Criação da chave de data atual
             date = datetime.now()
             date_key = date.strftime("%Y-%m-%d %H:%M:%S")
     
@@ -42,7 +39,6 @@ class RouterTrainingDataDAO: # DAO - Data Access Object
                 }
             })
             
-            print(result.matched_count)
             return result.matched_count >= 1
 
         except Exception as e:

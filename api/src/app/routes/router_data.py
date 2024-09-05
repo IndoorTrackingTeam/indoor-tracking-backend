@@ -9,7 +9,7 @@ router = APIRouter()
 @router.post('/create', status_code=status.HTTP_201_CREATED, response_description='Insert router data to mongoDB', response_model=Message)
 def create_training_data(data: RouterData):
     routerDataDAO = RouterDataDAO()
-
+    
     status = routerDataDAO.update(data)
 
     if status == False:
