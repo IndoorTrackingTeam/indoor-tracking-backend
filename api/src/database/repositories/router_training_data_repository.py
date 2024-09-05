@@ -45,4 +45,12 @@ class RouterTrainingDataDAO: # DAO - Data Access Object
             print(f'There was an error when trying to insert new data: {e}')
             return None
     
+    def get_all(self):
+        try:
+            result = self.db.collection.find({}, {"room": 1, "date": 1, "_id": 0})
+            
+            return result
 
+        except Exception as e:
+            print(f'There was an error when trying to insert new data: {e}')
+            return None
