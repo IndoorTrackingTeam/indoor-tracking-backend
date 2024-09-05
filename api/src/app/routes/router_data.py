@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, status
 
 from src.database.repositories.router_data_repository import RouterDataDAO
 from src.models.router_data import RouterData
-from src.utils import Message
+from src.utils.converter import Message
 
 router = APIRouter()
 

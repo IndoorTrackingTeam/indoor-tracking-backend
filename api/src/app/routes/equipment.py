@@ -2,7 +2,7 @@ from typing import List
 from fastapi import APIRouter, status, HTTPException, Body
 from src.database.repositories.equipment_repository import EquipmentDAO
 from src.models.equipment_model import EquipmentBase, Equipment, EquipmentMaintenance, AllEquipmentsHistoric, EquipmentCurrentDateAndRoom, UpdateEquipmentsHistoric, UpdateEquipmentsCurrentRoom, UpdateImage
-from src.utils import Message, convert_mongo_document
+from src.utils.converter import Message, convert_mongo_document
 
 router = APIRouter()
 
