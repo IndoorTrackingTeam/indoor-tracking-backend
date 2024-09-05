@@ -8,3 +8,5 @@ pytest==8.2.1
 pytest-html-reporter==0.2.9
 python-multipart
 pytest-cov
+pandas
+scikit-learn
