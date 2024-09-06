@@ -16,8 +16,8 @@ env:
   IMAGE: api
   PORT: 8000
   REGION: us-east1
-  CPU: 1
-  MEMORY: 128Mi
+  CPU: 2
+  MEMORY: 512Mi
   TIMEOUT: 300
   CONCURRENCY: 80
   MAX_INSTANCES: 1
