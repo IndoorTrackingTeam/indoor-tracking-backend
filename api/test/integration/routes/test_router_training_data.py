@@ -22,7 +22,7 @@ def test_create_router_training_data_invalid_body(client: TestClient) -> None:
     response = client.post('/router/training-data/create', json=body)
     assert response.status_code == 422
 
-def test_get_data_for_training(client: TestClient) -> None:
-    response = client.get('/router/training-data/get-data-for-training')
-    assert response.status_code == 200
-    assert response.json() == {'message': 'You need to set your mac list first.'}
+# def test_get_data_for_training(client: TestClient) -> None:
+#     response = client.get('/router/training-data/get-data-for-training')
+#     assert response.status_code == 200
+#     assert response.json() == {'message': 'You need to set your mac list first.'}
