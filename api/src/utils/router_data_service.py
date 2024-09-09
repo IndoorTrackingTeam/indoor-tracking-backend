@@ -51,3 +51,18 @@ def split_data(df):
     test_df = test_df.reset_index(drop=True)
 
     return [train_df, test_df]
+
+def convert_last_data_to_df(doc):
+    settingsDAO = SettingsDAO()
+    macs = settingsDAO.get_mac_list()
+    
+    if macs == None:
+        raise DocumentNotFoundError("There isn`t a mac list.")
+
+    df = pd.DataFrame(0, index=[0], columns=macs)
+
+    for item in doc[0]['routers']:
+        if item['mac'] in macs:
+            df[item['mac']] = item['rssi']
+
+    return df
