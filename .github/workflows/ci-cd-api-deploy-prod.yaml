@@ -16,8 +16,8 @@ env:
   IMAGE: api
   PORT: 8000
   REGION: us-east1
-  CPU: 1
-  MEMORY: 128Mi
+  CPU: 2
+  MEMORY: 512Mi
   TIMEOUT: 300
   CONCURRENCY: 80
   MAX_INSTANCES: 1
@@ -27,8 +27,27 @@ env:
 
 
 jobs:
+  test: 
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    environment: backend
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r api/requirements.txt
+
+    - name: Integration tests with pytest
+      run: |
+        pytest -vv --cov
+    
   deploy:
     name: Deploy API
+    needs: test
     runs-on: ubuntu-latest
     environment: backend
 

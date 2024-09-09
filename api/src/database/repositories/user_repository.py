@@ -1,7 +1,7 @@
-from src.models import UserBase, Login, UserAdmin, UserPhoto
+from src.models.user_model import UserBase, Login, UserAdmin, UserBasicData
 from src.database.config_db import Database
 import json
-from bson import json_util 
+from bson import ObjectId, json_util 
 import gridfs
 
 class UserDAO: # DAO - Data Access Object
@@ -10,7 +10,7 @@ class UserDAO: # DAO - Data Access Object
 
     def get_all_users(self):
         try:
-            result = self.db.collection.find()
+            result = self.db.collection.find({}, {'_id': 0, 'password': 0} )
             data_json = json.loads(json_util.dumps(result))
 
             return data_json
@@ -31,12 +31,33 @@ class UserDAO: # DAO - Data Access Object
         
     def get_user_by_email(self, email):
         try:
-            result = self.db.collection.find_one({'email': email})
+            result = self.db.collection.find_one({'email': email}, {'_id': 0,'email': 1, 'name': 1, 'photo':1})
+            data_json = json.loads(json_util.dumps(result))
 
-            return result
+            return data_json
         except Exception as e:
             print(f'There was an error when trying to get user: {e}')
-            return None
+            return False
+
+    def get_user_by_id(self, id):
+        try:
+            result = self.db.collection.find_one({'_id': ObjectId(id)}, {'_id': 0,'email': 1, 'name': 1, 'photo':1})
+            data_json = json.loads(json_util.dumps(result))
+
+            return data_json
+        except Exception as e:
+            print(f'There was an error when trying to get user: {e}')
+            return False
+    
+    def get_user_photo_by_email(self, email):
+        try:
+            result = self.db.collection.find_one({'email': email}, {'photo': 1})
+            data_json = json.loads(json_util.dumps(result))
+
+            return data_json
+        except Exception as e:
+            print(f'There was an error when trying to get user: {e}')
+            return False
 
     def login_authentication(self, user_login: Login):
         try:
@@ -81,6 +102,18 @@ class UserDAO: # DAO - Data Access Object
     def update_user(self, data_user: UserBase):
         try:
             result = self.db.collection.update_one({'email': data_user.email}, {'$set':  data_user.model_dump()})
+
+            if result.modified_count == 0:
+                return False
+            else:
+                return True
+        except Exception as e:
+            print(f'There was an error when trying to the update user: {e}')
+            return None
+
+    def update_user_photo(self, data_user: UserBasicData):
+        try:
+            result = self.db.collection.update_one({'_id': ObjectId(data_user.id)}, {'$set':  {'photo': data_user.photo}})
 
             if result.modified_count == 0:
                 return False

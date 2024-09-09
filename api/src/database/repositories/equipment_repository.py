@@ -2,7 +2,7 @@ from src.database.config_db import Database
 from datetime import datetime
 import json
 from bson import json_util
-from src.models import EquipmentBase, EquipmentMaintenance, UpdateEquipmentsHistoric, UpdateEquipmentsCurrentRoom
+from src.models.equipment_model import EquipmentBase, EquipmentMaintenance, UpdateEquipmentsHistoric, UpdateEquipmentsCurrentRoom, UpdateImage
 
 class EquipmentDAO: # DAO - Data Access Object
     def __init__(self):
@@ -10,7 +10,7 @@ class EquipmentDAO: # DAO - Data Access Object
 
     def get_all(self):
         try:
-            res = self.db.collection.find({}, {'_id': 0, 'name': 1,'register': 1, 'maintenance': 1, 'c_room': 1, 'c_date': 1, 'esp_id': 1} )
+            res = self.db.collection.find({}, {'_id': 0, 'name': 1,'register': 1, 'maintenance': 1, 'c_room': 1, 'c_date': 1, 'esp_id': 1, "image": 1} )
 
             parsed_json = json.loads(json_util.dumps(res))
             return parsed_json
@@ -115,11 +115,7 @@ class EquipmentDAO: # DAO - Data Access Object
         
     def update_historic(self, equipment_data: UpdateEquipmentsHistoric):
         try:
-            new_data = {
-                'room': equipment_data.room,
-                'initial_date': equipment_data.date,
-            }
-            res = self.db.collection.update_one({'esp_id': equipment_data.esp_id}, {'$push': {'historic': new_data}})
+            res = self.db.collection.update_one({'esp_id': equipment_data.esp_id}, {'$push': {'historic': equipment_data.model_dump(exclude='esp_id')}})
 
             if res.matched_count == 0:
                 return False
@@ -134,7 +130,7 @@ class EquipmentDAO: # DAO - Data Access Object
         try:
             date = datetime.now()
             
-            res = self.db.collection.update_one({'esp_id': equipment_data.esp_id},{'$set': {'c_room': equipment_data.room, 'c_date': date}})
+            res = self.db.collection.update_one({'esp_id': equipment_data.esp_id},{'$set': {'c_room': equipment_data.c_room, 'c_date': date}})
 
             if res.matched_count == 0:
                 return False
@@ -142,5 +138,17 @@ class EquipmentDAO: # DAO - Data Access Object
                 return True
         except Exception as e:
             print(f'There was an error trying to update equipment\'s current room: {e}')
+            return None
+        
+    def update_equipment_image(self, data: UpdateImage):
+        try:
+            result = self.db.collection.update_one({'register': data.register_}, {'$set':  {'image': data.image}})
+
+            if result.modified_count == 0:
+                return False
+            else:
+                return True
+        except Exception as e:
+            print(f'There was an error when trying to the upload image to equipment: {e}')
             return None
         
