@@ -199,40 +199,6 @@ def response_historic():
         }
     ]
 
-def response_current_room_date():
-    return {
-            "name": "Defibrillator",
-            "register": "PAT2222",
-            "c_room": "Emergency",
-            "c_date": "2024-08-08T19:54:14",
-        }
-
-def valid_esp_id_room():
-    return {
-        "esp_id": "3333",
-        "c_room": "Emergency"
-    }
-
-def invalid_esp_id_room():
-    return {
-        "esp_id": "invalid",
-        "c_room": "Emergency"
-    }
-
-def valid_update_historic():
-    return {
-        "esp_id": "3333",
-        "room": "Maintenance room",
-        "initial_date": "2024-08-08T19:54:14"
-    }
-
-def invalid_update_historic():
-    return {
-        "esp_id": "invalid",
-        "room": "Maintenance room",
-        "initial_date": "2024-08-08T19:54:14"
-    }
-
 def valid_update_image():
     return {
   "register": "PAT2222",
