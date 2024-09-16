@@ -1,3 +1,4 @@
+from typing import List
 from fastapi import APIRouter, HTTPException, status
 
 from src.database.repositories.hospital_settings_repository import SettingsDAO
@@ -18,7 +19,7 @@ def create_mac_list(macs: MacList):
     return Message(message='Data created successfully')
 
 @router.put("/update-mac-list", status_code=status.HTTP_200_OK, response_description='Update the mac list', response_model=Message)
-def update_maintenante_equipment(macs: MacList):
+def update_mac_list(macs: MacList):
     settingsDAO = SettingsDAO()
     
     status = settingsDAO.update_mac_list(macs)
@@ -29,3 +30,16 @@ def update_maintenante_equipment(macs: MacList):
         raise HTTPException(status_code=500)
 
     return Message(message='List updated successfully')
+
+@router.get("/get-mac-list", status_code=status.HTTP_200_OK, response_description='Read the mac list', response_model=dict)
+def get_mac_list():
+    settingsDAO = SettingsDAO()
+    
+    macs = settingsDAO.get_mac_list()
+
+    if macs == []:
+        raise HTTPException(status_code=404, detail="No mac list found")
+    elif macs == None:
+        raise HTTPException(status_code=500)
+
+    return macs
