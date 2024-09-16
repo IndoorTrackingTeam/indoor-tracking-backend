@@ -1,5 +1,6 @@
 from typing import List
-from fastapi import APIRouter, status, HTTPException, Body
+from fastapi import APIRouter, requests, status, HTTPException, Body
+from src.utils.equipment_service import update_database
 from src.database.repositories.equipment_repository import EquipmentDAO
 from src.models.equipment_model import EquipmentBase, Equipment, EquipmentMaintenance, AllEquipmentsHistoric, UpdateImage
 from src.utils.converter import Message, convert_mongo_document
@@ -105,3 +106,24 @@ def update_user(update_equipment_image: UpdateImage):
     
     return Message(message='Image uploaded successfully')
 
+@router.put('/update-equipments-position', status_code=status.HTTP_200_OK, response_description='Update equipments position', response_model=Message)  
+def update_equipments_position():
+    try:
+        equipmentDAO = EquipmentDAO()
+        all_esp = equipmentDAO.get_all_esp_id()
+        url = 'https://run-machine-learning-api-prod-131050301176.us-east1.run.app/model-training/get-esp-position?esp_id='
+
+        # Updating each esp
+        for esp in all_esp:
+            new_url = url + esp['esp_id']
+            response = requests.get(new_url)
+
+            if response.status_code == 200:
+                update_database(equipmentDAO, response.json(), esp['esp_id'], 0)
+            else:
+                print(f'Erro {response.status_code}: {response.text}')
+        
+        return Message(message="Updated equipments position successfully")
+                
+    except Exception as e:
+        Message(message=f'Error when updating equipments position: {e}')
