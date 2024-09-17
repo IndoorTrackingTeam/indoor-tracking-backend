@@ -111,6 +111,17 @@ class EquipmentDAO: # DAO - Data Access Object
             print(f'There was an error when trying to the upload image to equipment: {e}')
             return None
         
+    def get_all_esp_id(self):
+        try:
+            res = self.db.collection.find({}, {'_id': 0, 'esp_id': 1} )
+
+            parsed_json = json.loads(json_util.dumps(res))
+            return parsed_json
+        
+        except Exception as e:
+            print(f'There was an error trying to get the equipment: {e}')
+            return None
+        
     def get_current_room_and_date(self, esp_id):
         try:
             res = self.db.collection.find_one({'esp_id': esp_id},  {'_id': 0, 'name': 1, 'register': 1,  'c_room': 1, 'c_date': 1})
