@@ -123,12 +123,17 @@ class UserDAO: # DAO - Data Access Object
             print(f'There was an error when trying to the update user: {e}')
             return None
         
-    # async def update_photo(self, email, encoded_contents):
-    #     try:
-    #         result = await self.db.collection.update_one({'email': email}, {'$set':  {'profile_image': encoded_contents.decode('utf-8')}})
+    def redefine_password(self, user_login: Login):
+        try:
+            result = self.db.collection.update_one({'email': user_login.email}, {'$set': {'password': user_login.password}})
 
-    #     except Exception as e:
-    #         print(f'There was an error when trying to the update user: {e}')
-    #         return None
+            if result.modified_count == 0:
+                return False
+            else:
+                return True
+        except Exception as e:
+            print(f'There was an error trying to change user: {e}')
+            return None
+    
     
     
