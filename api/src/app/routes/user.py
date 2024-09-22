@@ -1,6 +1,8 @@
 from typing import List, Union
-from fastapi import APIRouter, status, HTTPException, Body
+from fastapi import APIRouter, BackgroundTasks, status, HTTPException, Body
 from fastapi.responses import JSONResponse
+
+from src.utils.user_service import send_email_background
 from src.database.repositories.user_repository import UserDAO
 from src.models.user_model import UserBase, Login, UserAdmin, UserData, UserId, UserBasicData, UpdateUserPhoto
 from src.utils.converter import Message
@@ -116,22 +118,20 @@ def update_user(update_user_photo: UpdateUserPhoto):
     
     return Message(message='Image uploaded successfully')
 
+@router.get('/send-email/redefine-password')
+def send_email_backgroundtasks(background_tasks: BackgroundTasks, email: str):
+    send_email_background(background_tasks, 'Redefinição de senha', email)
 
-# @router.post("/upload-photo/")
-# # async def upload_image(update_photo: UserPhoto):
-# async def upload_image(email: str = Form(...), image_: UploadFile = File(...)):
-#     if image_.content_type not in ["image/jpeg", "image/png"]:
-#         raise HTTPException(status_code=400, detail="Invalid image format")
-     
-#     userDAO = UserDAO
-#     # Ler o arquivo de imagem
-#     # image.filename = "teste.jpg"
-#     image_data = await image_.read()
-#     encoded_contents = base64.b64encode(image_data)
+    return Message(message='Sending email')
 
-#     filename_ = image_.filename
-#     print(f'File name: {filename_}')
+@router.post('/redefine-password', status_code=status.HTTP_200_OK, response_description='Change user authorizations (administrator)', response_model=Message)
+def change_admin(user_login: Login):
+    userDAO = UserDAO()
+    user_updated = userDAO.redefine_password(user_login)
 
-#     status = await userDAO.update_photo(email, encoded_contents)
+    if user_updated == False:
+        raise HTTPException(status_code=404, detail='User not found')
+    elif user_updated == None:
+        raise HTTPException(status_code=500)
 
-#     return Message(message='Image uploaded successfully')
+    return Message(message='User data changed')

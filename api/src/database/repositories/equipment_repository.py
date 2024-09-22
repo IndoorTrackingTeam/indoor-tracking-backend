@@ -2,7 +2,7 @@ from src.database.config_db import Database
 from datetime import datetime
 import json
 from bson import json_util
-from src.models.equipment_model import EquipmentBase, EquipmentMaintenance, UpdateEquipmentsHistoric, UpdateEquipmentsCurrentRoom, UpdateImage
+from src.models.equipment_model import EquipmentBase, EquipmentMaintenance, UpdateEquipmentsCurrentRoom, UpdateEquipmentsHistoric, UpdateImage
 
 class EquipmentDAO: # DAO - Data Access Object
     def __init__(self):
@@ -98,15 +98,35 @@ class EquipmentDAO: # DAO - Data Access Object
         except Exception as e:
             print(f'There was an error trying to update equipment maintenance: {e}')
             return None
+        
+    def update_equipment_image(self, data: UpdateImage):
+        try:
+            result = self.db.collection.update_one({'register': data.register_}, {'$set':  {'image': data.image}})
 
+            if result.modified_count == 0:
+                return False
+            else:
+                return True
+        except Exception as e:
+            print(f'There was an error when trying to the upload image to equipment: {e}')
+            return None
+        
+    def get_all_esp_id(self):
+        try:
+            res = self.db.collection.find({}, {'_id': 0, 'esp_id': 1} )
+
+            parsed_json = json.loads(json_util.dumps(res))
+            return parsed_json
+        
+        except Exception as e:
+            print(f'There was an error trying to get the equipment: {e}')
+            return None
+        
     def get_current_room_and_date(self, esp_id):
         try:
             res = self.db.collection.find_one({'esp_id': esp_id},  {'_id': 0, 'name': 1, 'register': 1,  'c_room': 1, 'c_date': 1})
-            # print('one equipment: ', res['current_room'])
             parsed_json = json.loads(json_util.dumps(res))
             
-            # print('one equipment: ', res)
-
             return parsed_json
         except Exception as e:
             print(f'There was an error trying to get equipment: {e}')
@@ -126,10 +146,8 @@ class EquipmentDAO: # DAO - Data Access Object
             return None
         
     
-    def update_current_room(self, equipment_data: UpdateEquipmentsCurrentRoom):
+    def update_current_room(self, equipment_data: UpdateEquipmentsCurrentRoom, date):
         try:
-            date = datetime.now()
-            
             res = self.db.collection.update_one({'esp_id': equipment_data.esp_id},{'$set': {'c_room': equipment_data.c_room, 'c_date': date}})
 
             if res.matched_count == 0:
@@ -139,16 +157,3 @@ class EquipmentDAO: # DAO - Data Access Object
         except Exception as e:
             print(f'There was an error trying to update equipment\'s current room: {e}')
             return None
-        
-    def update_equipment_image(self, data: UpdateImage):
-        try:
-            result = self.db.collection.update_one({'register': data.register_}, {'$set':  {'image': data.image}})
-
-            if result.modified_count == 0:
-                return False
-            else:
-                return True
-        except Exception as e:
-            print(f'There was an error when trying to the upload image to equipment: {e}')
-            return None
-        

@@ -1,7 +1,8 @@
 from typing import List
 from fastapi import APIRouter, status, HTTPException, Body
+from src.utils.equipment_service import update_database, update_equipments_location
 from src.database.repositories.equipment_repository import EquipmentDAO
-from src.models.equipment_model import EquipmentBase, Equipment, EquipmentMaintenance, AllEquipmentsHistoric, EquipmentCurrentDateAndRoom, UpdateEquipmentsHistoric, UpdateEquipmentsCurrentRoom, UpdateImage
+from src.models.equipment_model import EquipmentBase, Equipment, EquipmentMaintenance, AllEquipmentsHistoric, UpdateImage
 from src.utils.converter import Message, convert_mongo_document
 
 router = APIRouter()
@@ -93,44 +94,6 @@ def delete_equipment(register_: str):
     
     return Message(message='Equipment deleted successfully')
 
-@router.get("/get-equipments-current-room-and-date", status_code=status.HTTP_200_OK, response_description='Get equipment\'s current room and date', response_model=EquipmentCurrentDateAndRoom)
-def get_equipment_current_room_and_date_by_esp_id(esp_id: str):
-    equipmentDAO = EquipmentDAO()
-    equipment = equipmentDAO.get_current_room_and_date(esp_id)
-
-    if equipment == None:
-        raise HTTPException(status_code=404, detail="Equipment not found")
-    if equipment == False:
-        raise HTTPException(status_code=500)
-
-    equipment = convert_mongo_document(equipment)
-
-    return equipment
-
-@router.put("/update-historic", status_code=status.HTTP_200_OK, response_description='Updates equipment\'s historic', response_model=Message)
-def update_historic(update_data: UpdateEquipmentsHistoric):
-    equipmentDAO = EquipmentDAO()
-    update_status = equipmentDAO.update_historic(update_data)
-
-    if update_status == False:
-        raise HTTPException(status_code=404, detail="No equipment found")
-    elif update_status == None:
-        raise HTTPException(status_code=500)
-
-    return Message(message='Equipment updated successfully')
-
-@router.put("/update-current-room", status_code=status.HTTP_200_OK, response_description='Updates equipment\'s current room', response_model=Message)
-def update_current_room(update_data: UpdateEquipmentsCurrentRoom):
-    equipmentDAO = EquipmentDAO()
-    update_status = equipmentDAO.update_current_room(update_data)
-
-    if update_status == False:
-        raise HTTPException(status_code=404, detail="No equipment found")
-    elif update_status == None:
-        raise HTTPException(status_code=500)
-
-    return Message(message='Equipment updated successfully')
-
 @router.put('/update-image', status_code=status.HTTP_200_OK, response_description='Update user photo', response_model=Message)  
 def update_user(update_equipment_image: UpdateImage):
     equipmentDAO = EquipmentDAO()
@@ -143,3 +106,11 @@ def update_user(update_equipment_image: UpdateImage):
     
     return Message(message='Image uploaded successfully')
 
+@router.post('/update-equipments-position', status_code=status.HTTP_200_OK, response_description='Update equipments position', response_model=Message)  
+def update_equipments_position():
+    try:
+        update_equipments_location()
+        return Message(message="Updated equipments position successfully")
+                
+    except Exception as e:
+        Message(message=f'Error when updating equipments position: {e}')

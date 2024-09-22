@@ -78,39 +78,6 @@ def test_delete_equipment_invalid_register(client: TestClient) -> None:
     response = client.delete(f'/equipment/delete?register_={register}')
     assert response.status_code == 404
 
-def test_get_equipment_current_room_and_date_by_esp_id(client: TestClient) -> None:
-    esp_id = '2222'
-    response = client.get(f'/equipment/get-equipments-current-room-and-date?esp_id={esp_id}')
-    expected_response = mock.response_current_room_date()
-    assert response.status_code == 200
-    assert response.json() == expected_response
-
-def test_get_equipment_current_room_and_date_by_esp_id_invalid_esp_id(client: TestClient) -> None:
-    esp_id = 'invalid_esp_id'
-    response = client.get(f'/equipment/get-equipments-current-room-and-date?esp_id={esp_id}')
-    expected_response = mock.response_current_room_date()
-    assert response.status_code == 404
-
-def test_update_current_room(client: TestClient) -> None:
-    body = mock.valid_esp_id_room()
-    response = client.put(f'/equipment/update-current-room', json=body)
-    assert response.status_code == 200
-
-def test_update_current_room_invalid_esp_id(client: TestClient) -> None:
-    body = mock.invalid_esp_id_room()
-    response = client.put(f'/equipment/update-current-room', json=body)
-    assert response.status_code == 404
-
-def test_update_historic(client: TestClient) -> None:
-    body = mock.valid_update_historic()
-    response = client.put('/equipment/update-historic', json=body)
-    assert response.status_code == 200
-
-def test_update_historic_invalid_body(client: TestClient) -> None:
-    body = mock.invalid_update_historic()
-    response = client.put('/equipment/update-historic', json=body)
-    assert response.status_code == 404
-
 def test_update_image(client: TestClient) -> None:
     body = mock.valid_update_image()
     response = client.put('/equipment/update-image', json=body)

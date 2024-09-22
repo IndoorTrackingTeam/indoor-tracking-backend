@@ -10,3 +10,5 @@ python-multipart
 pytest-cov
 pandas
 scikit-learn
+requests
+fastapi-mail

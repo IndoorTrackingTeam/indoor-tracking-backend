@@ -24,6 +24,11 @@ env:
   MIN_INSTANCES: 0
   DB_URL: ${{ secrets.DB_URL }}
   ENV_QA: ${{ secrets.ENV_QA }}
+  MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+  MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+  MAIL_FROM: ${{ secrets.MAIL_FROM }}
+  MAIL_PORT: ${{ secrets.MAIL_PORT }}
+  MAIL_SERVER: ${{ secrets.MAIL_SERVER }}
 
 jobs:
   test: 
@@ -102,4 +107,9 @@ jobs:
         --min-instances=$MIN_INSTANCES \
         --max-instances=$MAX_INSTANCES \
         --set-env-vars=DB_URL=$DB_URL \
-        --set-env-vars=ENV_QA=$ENV_QA
+        --set-env-vars=ENV_QA=$ENV_QA \
+        --set-env-vars=MAIL_USERNAME=$MAIL_USERNAME \
+        --set-env-vars=MAIL_PASSWORD=$MAIL_PASSWORD \
+        --set-env-vars=MAIL_FROM=$MAIL_FROM \
+        --set-env-vars=MAIL_PORT=$MAIL_PORT \
+        --set-env-vars=MAIL_SERVER=$MAIL_SERVER 

@@ -7,8 +7,10 @@ from src.database.repositories.hospital_settings_repository import SettingsDAO
 def convert_docs_to_df(docs):
     # Get list of macs that is going to be used
     settingsDAO = SettingsDAO()
-    macs = settingsDAO.get_mac_list()
-    
+    macs_docs = settingsDAO.get_mac_list()
+
+    macs = list(macs_docs.keys())
+
     if macs == None:
         raise DocumentNotFoundError("There isn`t a mac list.")
     
@@ -54,7 +56,9 @@ def split_data(df):
 
 def convert_last_data_to_df(doc):
     settingsDAO = SettingsDAO()
-    macs = settingsDAO.get_mac_list()
+    macs_docs = settingsDAO.get_mac_list()
+
+    macs = list(macs_docs.keys())
     
     if macs == None:
         raise DocumentNotFoundError("There isn`t a mac list.")

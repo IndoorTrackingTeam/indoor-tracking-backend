@@ -32,6 +32,10 @@ class EquipmentMaintenance(BaseModel):
     register_: str = Field(alias="register")
     maintenance: bool = Field(default=False)
 
+class UpdateImage(BaseModel):
+    register_: str = Field(alias="register")
+    image: str = Field(...)
+
 class EquipmentCurrentDateAndRoom(BaseModel):
     name: str = Field(...)
     register_: str = Field(alias="register")
@@ -46,7 +50,3 @@ class UpdateEquipmentsHistoric(BaseModel):
 class UpdateEquipmentsCurrentRoom(BaseModel):
     esp_id: str = Field(...)
     c_room: str = Field(...)
-
-class UpdateImage(BaseModel):
-    register_: str = Field(alias="register")
-    image: str = Field(...)

@@ -8,7 +8,7 @@ class SettingsDAO: # DAO - Data Access Object
 
     def create_mac_list(self, macs: MacList):
         try:
-            result = self.db.collection.insert_one(macs.model_dump())
+            result = self.db.collection.insert_one({"hospital_name": macs.hospital_name, "macs": macs.macs})
             
             return result.acknowledged
         except Exception as e:
