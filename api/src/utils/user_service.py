@@ -2,6 +2,8 @@ import os
 
 from fastapi import BackgroundTasks
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
+from jinja2 import Template
+
 from dotenv import load_dotenv
 load_dotenv('.env')
 
@@ -11,49 +13,25 @@ conf = ConnectionConfig(
     MAIL_FROM=os.getenv('MAIL_FROM'),
     MAIL_PORT=int(os.getenv('MAIL_PORT')),
     MAIL_SERVER=os.getenv('MAIL_SERVER'),
-    MAIL_FROM_NAME=os.getenv('MAIN_FROM_NAME'),
+    MAIL_FROM_NAME="Indoor Tracking",
     MAIL_SSL_TLS=False,
     MAIL_STARTTLS=True,
     USE_CREDENTIALS=True
 )
 
-html_content = """"
-<html>
-<body style="margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, Helvetica, sans-serif;">
-<div style="width: 100%; background: #efefef; border-radius: 10px; padding: 10px;">
-  <div style="margin: 0 auto; width: 90%; text-align: center;">
-    <!-- <h1 style="background-color: rgba(0, 53, 102, 1); padding: 5px 10px; border-radius: 5px; color: white;">INDOOR TRACKING</h1> -->
-    <div style="margin: 30px auto; background: white; width: 30rem; border-radius: 10px; padding: 50px; text-align: center;">
-      
-      <img src="cid:logo"  alt="logo" style="width: 15rem"/>
-      
-      <h3 style="margin-bottom: 20px; font-size: 25px;">Redefinir senha</h3>
-     
-      <p style="margin-bottom: 10px;">Insira uma nova senha:</p>
-
-      <form method="GET" action="https://www.google.com/search" target="_blank">
-        <!-- Campo de entrada de senha -->
-        <input id="password" 
-               style="width: 200px; font-size: 16px; padding: 10px;" 
-               type="password" 
-               name="q" 
-               placeholder="Digite sua senha">
-          
-        <!-- Botão de redefinir -->
-        <input style="display: block; margin: 0 auto; border: none; background-color: #F1B600; color: #394170; width: 200px; line-height: 24px; padding: 10px; font-size: 24px; border-radius: 10px; cursor: pointer; text-decoration: none;" 
-               type="submit" value="Redefinir">
-    </form>
-
-    <p>Se você não solicitou essa alteração, ignore este email.</p>
-
-    </div>
-  </div>
-</div>
-</body>
-</html>
-"""
-
+def load_html(file_path: str, context: str) -> str:
+    with open(file_path, 'r') as file:
+      template = Template(file.read())
+      return template.render(context) 
+    
 def send_email_background(background_tasks: BackgroundTasks, subject: str, email_to: str):
+    context = {
+        "email": email_to
+    }
+
+    template_path = "src/utils/templates/email_template.html"
+    html_content = load_html(template_path,context)
+
     message = MessageSchema(
         subject=subject,
         recipients=[email_to],
