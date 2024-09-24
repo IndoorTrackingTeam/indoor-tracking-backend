@@ -34,7 +34,7 @@ def convert_docs_to_df(docs):
     df = pd.DataFrame(data)
 
     df = df.fillna(0)
-    print(df)
+    # print(df)
 
     # Merge mac list with dataframe
     new_df = pd.DataFrame(columns=macs)

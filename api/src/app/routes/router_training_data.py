@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException, status
+import itertools
 
 from src.exceptions import DocumentNotFoundError
 from src.database.repositories.router_training_data_repository import RouterTrainingDataDAO
@@ -35,9 +36,11 @@ def get_data_for_training():
 
             df = convert_docs_to_df(docs)
         
-            processed_data  = split_data(df)
+            processed_data_df  = split_data(df)
 
-            return processed_data
+            processed_data_dict = [df.to_dict(orient="records") for df in processed_data_df]
+
+            return processed_data_dict
         except DocumentNotFoundError:
             return Message(message='You need to set your mac list first.')
         
