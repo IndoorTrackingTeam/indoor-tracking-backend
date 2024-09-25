@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, status
 
+from src.exceptions import DocumentNotFoundError
 from src.utils.router_data_service import convert_last_data_to_df
 from src.database.repositories.router_data_repository import RouterDataDAO
 from src.models.router_data import RouterData
@@ -23,15 +24,18 @@ def create_training_data(data: RouterData):
 
 @router.get('/get-last-data-from-esp-id', status_code=status.HTTP_200_OK)
 def get_last_data_from_esp_id(esp_id: str):
-    routerDataDAO = RouterDataDAO()
-    
-    doc = routerDataDAO.get_last_data(esp_id)
+    try:
+        routerDataDAO = RouterDataDAO()
+        
+        doc = routerDataDAO.get_last_data(esp_id)
 
-    df = convert_last_data_to_df(doc)
+        if doc == None or doc == False:
+            raise HTTPException(status_code=500)
+        
+        df = convert_last_data_to_df(doc)
 
-    dict_data = df.to_dict(orient='records')
+        dict_data = df.to_dict(orient='records')
 
-    if doc == None or doc == False:
-        raise HTTPException(status_code=500)
-    
-    return dict_data
+        return dict_data
+    except DocumentNotFoundError:
+            return Message(message='You need to set your mac list first.')
