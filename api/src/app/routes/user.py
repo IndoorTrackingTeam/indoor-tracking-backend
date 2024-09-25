@@ -124,8 +124,8 @@ def send_email_backgroundtasks(background_tasks: BackgroundTasks, email: str):
 
     return Message(message='Sending email')
 
-@router.post('/redefine-password', status_code=status.HTTP_200_OK, response_description='Change user authorizations (administrator)', response_model=Message)
-def change_admin(user_login: Login):
+@router.put('/redefine-password', status_code=status.HTTP_200_OK, response_description='Redefine password', response_model=Message)
+def redefine_password(user_login: Login):
     userDAO = UserDAO()
     user_updated = userDAO.redefine_password(user_login)
 

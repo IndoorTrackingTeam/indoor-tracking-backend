@@ -127,7 +127,7 @@ class UserDAO: # DAO - Data Access Object
         try:
             result = self.db.collection.update_one({'email': user_login.email}, {'$set': {'password': user_login.password}})
 
-            if result.modified_count == 0:
+            if result.matched_count == 0:
                 return False
             else:
                 return True
