@@ -47,7 +47,19 @@ jobs:
 
     - name: Integration tests with pytest
       run: |
-        pytest -vv --cov
+        pytest -vv --cov=api --cov-report=xml --cov-report=html
+
+    - name: Upload HTML report
+      uses: actions/upload-artifact@v3
+      with:
+        name: pytest_html_report
+        path: pytest_html_report.html
+
+    - name: Upload HTML coverage report
+      uses: actions/upload-artifact@v3
+      with:
+        name: html-coverage-report
+        path: htmlcov/
     
   deploy:
     name: Deploy API
