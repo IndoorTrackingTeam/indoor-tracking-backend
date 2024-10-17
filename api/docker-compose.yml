@@ -10,6 +10,11 @@ services:
     environment:
       - DB_URL
       - ENV_QA
+      - MAIL_USERNAME
+      - MAIL_PASSWORD
+      - MAIL_FROM
+      - MAIL_PORT
+      - MAIL_SERVER
 
 networks:
   api-network:
