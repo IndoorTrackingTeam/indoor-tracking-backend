@@ -8,6 +8,7 @@ class NetworksRouterTrainingData(BaseModel):
     name_router: str = Field(...)
     rssi: int = Field(...)
     esp_id: str = Field(...)
+    media: float = Field(...)
 
 class RouterTrainingData(BaseModel):
     room: str = Field(...)
@@ -17,6 +18,7 @@ class NetworksRouterData(BaseModel):
     mac: str = Field(...)
     name_router: str = Field(...)
     rssi: int = Field(...)
+    media: float = Field(...)
 
 class RouterData(BaseModel):
     esp_id: str = Field(...)

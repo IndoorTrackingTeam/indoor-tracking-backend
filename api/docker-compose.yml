@@ -9,7 +9,7 @@ services:
       - 8000:8000
     environment:
       - DB_URL
-      - ENV_QA
+      - DB_NAME
       - MAIL_USERNAME
       - MAIL_PASSWORD
       - MAIL_FROM
