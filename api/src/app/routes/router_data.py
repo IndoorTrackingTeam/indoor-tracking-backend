@@ -33,9 +33,6 @@ def get_last_data_from_esp_id(esp_id: str):
             raise HTTPException(status_code=500)
         
         df = convert_last_data_to_df(doc)
-
-        dict_data = df.to_dict(orient='records')
-
-        return dict_data
+        return df
     except DocumentNotFoundError:
             return Message(message='You need to set your mac list first.')
