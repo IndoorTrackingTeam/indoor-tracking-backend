@@ -11,7 +11,7 @@ def convert_docs_to_df(docs):
 
     macs = list(macs_docs.keys())
 
-    if macs == None:
+    if macs == None or macs == []:
         raise DocumentNotFoundError("There isn`t a mac list.")
     
     macs.append("room")
@@ -60,13 +60,20 @@ def convert_last_data_to_df(doc):
 
     macs = list(macs_docs.keys())
     
-    if macs == None:
+    if macs == None or macs == []:
         raise DocumentNotFoundError("There isn`t a mac list.")
 
-    df = pd.DataFrame(0, index=[0], columns=macs)
+    dict_dataframes = {}
 
-    for item in doc[0]['routers']:
-        if item['mac'] in macs:
-            df[item['mac']] = item['rssi']
+    for idx, (date, routers) in enumerate(zip(doc[0]['dates'], doc[0]['routers'])):
+        df = pd.DataFrame(0, index=[0], columns=macs)
 
-    return df
+        for item in routers:
+            if item['mac'] in macs:
+                df[item['mac']] = item['rssi']
+
+        dict_data = df.to_dict(orient='records')
+
+        dict_dataframes[date] = dict_data
+
+    return dict_dataframes
