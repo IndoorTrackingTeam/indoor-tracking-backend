@@ -26,14 +26,14 @@ def test_read_all(client: TestClient) -> None:
     assert response.status_code == 200
     assert response.json() == expected_response
 
-def test_read_one(client: TestClient, get_user_id) -> None:
+def test_get_user(client: TestClient, get_user_id) -> None:
     valid_id = get_user_id
     response = client.get(f'/user/get-user?id={valid_id}')
     expected_response = mock.response_get_one()
     assert response.status_code == 200
     assert response.json() == expected_response
 
-def test_read_one_fail(client: TestClient) -> None:
+def test_get_user_fail(client: TestClient) -> None:
     invalid_id = "66d1cd3699dd1572552651dd"
     response = client.get(f'/user/get-user?id={invalid_id}')
     assert response.status_code == 404
@@ -112,3 +112,27 @@ def test_update_photo_invalid_register(client: TestClient) -> None:
     body = mock.invalid_update_photo()
     response = client.put('/user/update-photo', json=body)
     assert response.status_code == 404
+
+def test_send_email_backgroundtasks_success(client: TestClient) -> None:
+    valid_email = "jake@email.com"
+    response = client.get(f'/user/send-email/redefine-password?email={valid_email}')
+    assert response.status_code == 202
+    assert response.json()["message"] == "Sending email"
+
+def test_send_email_backgroundtasks_invalid_email(client: TestClient) -> None:
+    invalid_email = "invalid@email.com"
+    response = client.get(f'/user/send-email/redefine-password?email={invalid_email}')
+    assert response.status_code == 404
+    assert response.json()["detail"] == "User not found"
+
+def test_redefine_password(client: TestClient) -> None:
+    body = mock.valid_login_for_redefine_password()
+    response = client.put("/user/redefine-password", json=body)
+    assert response.status_code == 200
+    assert response.json()["message"] == "User data changed"
+
+def test_redefine_password_invalid_email(client: TestClient) -> None:
+    body = mock.invalid_login_for_redefine_password()
+    response = client.put("/user/redefine-password", json=body)
+    assert response.status_code == 404
+    assert response.json()["detail"] == "User not found"
