@@ -11,7 +11,6 @@ url = 'https://run-machine-learning-api-prod-131050301176.us-east1.run.app/model
 def update_equipments_location():
     try:
         equipmentDAO = EquipmentDAO()
-
         all_esp = equipmentDAO.get_all_esp_id()
 
         # Updating each esp
@@ -19,25 +18,33 @@ def update_equipments_location():
             new_url = url + esp['esp_id']
             response = requests.get(new_url)
 
-            if response.status_code == 200:
-                update_database(equipmentDAO, response.json(), esp['esp_id'], 0)
+            if response.status_code == 200 and response.json() != "":
+                new_current_room = response.json()
+                equipment = equipmentDAO.get_current_room_and_date(esp['esp_id'])
+                
+                if str(new_current_room) != str(equipment['c_room']):
+                    update_database(equipmentDAO, new_current_room, esp['esp_id'], equipment)
+                else:
+                    print("It didn`t move")
+
+                equipmentDAO.update_current_date(esp['esp_id'])
             else:
-                print(f'Erro {response.status_code}: {response.text}')
+                if response.json() == "":
+                    print(f'It wasn`t possible to get the room: {response.text}')
+                else:
+                    print(f'Erro {response.status_code}: {response.text}')
                 
     except Exception as e:
         print(f'Error when making the request: {e}')
         raise e
 
-def update_database(equipmentDAO, new_current_room, esp_id, num_try):
-    num_try += 1
+def update_database(equipmentDAO, new_current_room, esp_id, equipment):
     try:
-        sp_tz = ZoneInfo("America/Sao_Paulo")
+        date = datetime.now()
+        # date_key = date.strftime("%Y-%m-%d %H:%M:%S")
 
-        date = datetime.now(sp_tz)
-        date_key = date.strftime("%Y-%m-%d %H:%M:%S")
-
-        equipmentDAO.update_historic(UpdateEquipmentsHistoric(esp_id = esp_id, room = new_current_room, initial_date = date_key))
-        equipmentDAO.update_current_room(UpdateEquipmentsCurrentRoom(esp_id = esp_id, c_room = new_current_room), date_key)
+        equipmentDAO.update_historic(UpdateEquipmentsHistoric(esp_id = esp_id, room = equipment['c_room'], initial_date = equipment['initial_date']['$date']))
+        equipmentDAO.update_current_room(UpdateEquipmentsCurrentRoom(esp_id = esp_id, c_room = new_current_room), date)
             
     except Exception as e:
         print(f"Error when connecting with database: {e}")

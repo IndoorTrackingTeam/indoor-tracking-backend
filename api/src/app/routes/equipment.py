@@ -1,6 +1,6 @@
 from typing import List
 from fastapi import APIRouter, status, HTTPException, Body
-from src.utils.equipment_service import update_database, update_equipments_location
+from src.utils.equipment_service import update_equipments_location
 from src.database.repositories.equipment_repository import EquipmentDAO
 from src.models.equipment_model import EquipmentBase, Equipment, EquipmentMaintenance, AllEquipmentsHistoric, UpdateImage
 from src.utils.converter import Message, convert_mongo_document
