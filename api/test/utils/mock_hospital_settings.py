@@ -20,3 +20,13 @@ def invalid_mac_list():
             "32:33:00:00:D2:DF": "wifi section E"
         }
     }
+def valid_update_mac_list():
+    return {
+        "hospital_name": "hospital test",
+        "macs": {
+            "34:80:D2:02:FA:C8": "wifi section A",
+            "34:82:B2:02:FA:C6": "wifi section B",
+            "12:33:C2:02:00:FA": "wifi section C",
+            "32:33:00:00:D2:DF": "wifi section E"
+        }
+    }

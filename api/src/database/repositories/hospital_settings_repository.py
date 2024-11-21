@@ -30,6 +30,9 @@ class SettingsDAO: # DAO - Data Access Object
         try:
             result = self.db.collection.find_one({}, {"macs": 1, "_id": 0})
 
+            if result == None:
+                return []
+
             return result.get("macs", [])
             
         except Exception as e:
