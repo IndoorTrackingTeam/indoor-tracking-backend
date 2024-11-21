@@ -9,10 +9,9 @@ def convert_docs_to_df(docs):
     settingsDAO = SettingsDAO()
     macs_docs = settingsDAO.get_mac_list()
 
-    macs = list(macs_docs.keys())
-
-    if macs == None or macs == []:
+    if macs_docs == None or macs_docs == []:
         raise DocumentNotFoundError("There isn`t a mac list.")
+    macs = list(macs_docs.keys())
     
     macs.append("room")
     print(macs)
@@ -58,10 +57,9 @@ def convert_last_data_to_df(doc):
     settingsDAO = SettingsDAO()
     macs_docs = settingsDAO.get_mac_list()
 
-    macs = list(macs_docs.keys())
-    
-    if macs == None or macs == []:
+    if macs_docs == None or macs_docs == []:
         raise DocumentNotFoundError("There isn`t a mac list.")
+    macs = list(macs_docs.keys())
 
     dict_dataframes = {}
 

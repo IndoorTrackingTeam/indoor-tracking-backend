@@ -31,8 +31,10 @@ def get_last_data_from_esp_id(esp_id: str):
 
         if doc == None or doc == False:
             raise HTTPException(status_code=500)
+        if doc == []:
+            raise HTTPException(status_code=404, detail='Esp id not found')
         
         df = convert_last_data_to_df(doc)
         return df
     except DocumentNotFoundError:
-            return Message(message='You need to set your mac list first.')
+            raise HTTPException(status_code=406, detail='You need to set your mac list first.')
