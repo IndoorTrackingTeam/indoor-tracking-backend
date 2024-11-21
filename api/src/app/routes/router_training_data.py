@@ -42,7 +42,7 @@ def get_data_for_training():
 
             return processed_data_dict
         except DocumentNotFoundError:
-            return Message(message='You need to set your mac list first.')
+            raise HTTPException(status_code=406, detail='You need to set your mac list first.')
         
 @router.get('/get-all-macs-in-training', status_code=status.HTTP_200_OK, response_description='Get all macs found in the training collection') 
 def get_macs_in_training():
