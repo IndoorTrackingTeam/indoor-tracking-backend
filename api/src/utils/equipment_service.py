@@ -4,11 +4,12 @@ import requests
 
 from src.models.equipment_model import UpdateEquipmentsCurrentRoom, UpdateEquipmentsHistoric
 from src.database.repositories.equipment_repository import EquipmentDAO
+from src.models.user_model import NotificationBody
+from src.utils.user_service import notify_all_users
 
+url = 'https://run-machine-learning-api-prod-694723526996.us-east1.run.app/model-training/get-esp-position?esp_id='
 
-url = 'https://run-machine-learning-api-prod-131050301176.us-east1.run.app/model-training/get-esp-position?esp_id='
-
-def update_equipments_location():
+async def update_equipments_location():
     try:
         equipmentDAO = EquipmentDAO()
         all_esp = equipmentDAO.get_all_esp_id()
@@ -23,7 +24,10 @@ def update_equipments_location():
                 equipment = equipmentDAO.get_current_room_and_date(esp['esp_id'])
                 
                 if str(new_current_room) != str(equipment['c_room']):
-                    update_database(equipmentDAO, new_current_room, esp['esp_id'], equipment)
+                    date = datetime.now()
+                    update_database(equipmentDAO, new_current_room, esp['esp_id'], equipment, date)
+                    notification_body = NotificationBody(equipment_name=equipment['name'], register_= equipment['register'], date=date, location=equipment['c_room'])
+                    await notify_all_users(notification_body)
                 else:
                     print("It didn`t move")
 
@@ -38,11 +42,8 @@ def update_equipments_location():
         print(f'Error when making the request: {e}')
         raise e
 
-def update_database(equipmentDAO, new_current_room, esp_id, equipment):
+def update_database(equipmentDAO, new_current_room, esp_id, equipment, date):
     try:
-        date = datetime.now()
-        # date_key = date.strftime("%Y-%m-%d %H:%M:%S")
-
         equipmentDAO.update_historic(UpdateEquipmentsHistoric(esp_id = esp_id, room = equipment['c_room'], initial_date = equipment['initial_date']['$date']))
         equipmentDAO.update_current_room(UpdateEquipmentsCurrentRoom(esp_id = esp_id, c_room = new_current_room), date)
             
