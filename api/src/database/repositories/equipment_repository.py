@@ -124,7 +124,7 @@ class EquipmentDAO: # DAO - Data Access Object
         
     def get_current_room_and_date(self, esp_id):
         try:
-            res = self.db.collection.find_one({'esp_id': esp_id},  {'_id': 0, 'name': 1, 'register': 1,  'c_room': 1, 'c_date': 1})
+            res = self.db.collection.find_one({'esp_id': esp_id},  {'_id': 0, 'name': 1, 'register': 1,  'c_room': 1, 'initial_date': 1})
             parsed_json = json.loads(json_util.dumps(res))
             
             return parsed_json
@@ -148,7 +148,7 @@ class EquipmentDAO: # DAO - Data Access Object
     
     def update_current_room(self, equipment_data: UpdateEquipmentsCurrentRoom, date):
         try:
-            res = self.db.collection.update_one({'esp_id': equipment_data.esp_id},{'$set': {'c_room': equipment_data.c_room, 'c_date': date}})
+            res = self.db.collection.update_one({'esp_id': equipment_data.esp_id},{'$set': {'c_room': equipment_data.c_room, 'initial_date': date}})
 
             if res.matched_count == 0:
                 return False
@@ -157,3 +157,18 @@ class EquipmentDAO: # DAO - Data Access Object
         except Exception as e:
             print(f'There was an error trying to update equipment\'s current room: {e}')
             return None
+    
+    def update_current_date(self, esp_id: str):
+        try:
+            date = datetime.now()
+
+            res = self.db.collection.update_one({'esp_id': esp_id},{'$set': {'c_date': date}})
+
+            if res.matched_count == 0:
+                return False
+            else:
+                return True
+        except Exception as e:
+            print(f'There was an error trying to update equipment\'s current data(last time updated): {e}')
+            return None
+    

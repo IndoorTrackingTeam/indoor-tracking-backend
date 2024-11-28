@@ -9,6 +9,7 @@ def create_valid_equipments():
             "maintenance": False,
             "c_room": "Emergency",
             "c_date": datetime(2024,8,8,19,54,14),
+            "initial_date": datetime(2024,8,8,19,54,14),
             "esp_id": "1111",
             "historic": [
                 {
@@ -31,6 +32,7 @@ def create_valid_equipments():
             "maintenance": False,
             "c_room": "Emergency",
             "c_date": datetime(2024,8,8,19,54,14),
+            "initial_date": datetime(2024,8,8,19,54,14),
             "esp_id": "2222"
         },
         {
@@ -39,6 +41,7 @@ def create_valid_equipments():
             "maintenance": True,
             "c_room": "Maintenance room",
             "c_date": datetime(2024,8,8,19,54,14),
+            "initial_date": datetime(2024,8,8,19,54,14),
             "esp_id": "3333"
         }
     ]
@@ -49,7 +52,8 @@ def valid_equipments_response():
             "register": "PAT1111",
             "maintenance": False,
             "c_room": "Emergency",
-            "c_date": "2024-08-08T19:54:14",
+            "c_date": "2024-08-08T19:54:14Z",
+            "initial_date": None,
             "esp_id": "1111",
             "image": None
         },
@@ -58,7 +62,8 @@ def valid_equipments_response():
             "register": "PAT2222",
             "maintenance": False,
             "c_room": "Emergency",
-            "c_date": "2024-08-08T19:54:14",
+            "c_date": "2024-08-08T19:54:14Z",
+            "initial_date": None,
             "esp_id": "2222",
             "image": None
         },
@@ -67,7 +72,8 @@ def valid_equipments_response():
             "register": "PAT3333",
             "maintenance": True,
             "c_room": "Maintenance room",
-            "c_date": "2024-08-08T19:54:14",
+            "c_date": "2024-08-08T19:54:14Z",
+            "initial_date": None,
             "esp_id": "3333",
             "image": None
         }
@@ -80,6 +86,7 @@ def create_valid_equipment():
             "maintenance": False,
             "c_room": "Room 2",
             "c_date": "2024-08-08T22:46:42",
+            "initial_date": "2024-08-08T19:54:14",
             "esp_id": "4444"
         }
 
@@ -89,7 +96,7 @@ def equipment_already_exist():
             "register": "PAT1111",
             "maintenance": False,
             "c_room": "Emergency",
-            "c_date": "2024-08-08T19:54:14",
+            "c_date": "2024-08-08T19:54:14Z",
             "esp_id": "1111"
         }
 
@@ -99,20 +106,21 @@ def response_get_one():
             "register": "PAT1111",
             "maintenance": False,
             "c_room": "Emergency",
-            "c_date": "2024-08-08T19:54:14",
+            "c_date": "2024-08-08T19:54:14Z",
+            "initial_date": "2024-08-08T19:54:14Z",
             "esp_id": "1111",
             "image": None,
             "historic": [
                 {
-                    "initial_date": "2024-08-05T08:00:00",
+                    "initial_date": "2024-08-05T08:00:00Z",
                     "room": "Room 20"
                 },
                 {
-                    "initial_date": "2024-08-07T15:34:14",
+                    "initial_date": "2024-08-07T15:34:14Z",
                     "room": "Clinic"
                 },
                 {
-                    "initial_date": "2024-08-07T22:12:16",
+                    "initial_date": "2024-08-07T22:12:16Z",
                     "room": "Room 14"
                 }
             ]
@@ -125,20 +133,21 @@ def equipments_in_same_room():
             "register": "PAT1111",
             "maintenance": False,
             "c_room": "Emergency",
-            "c_date": "2024-08-08T19:54:14",
+            "c_date": "2024-08-08T19:54:14Z",
+            "initial_date": "2024-08-08T19:54:14Z",
             "esp_id": "1111",
             "image": None,
             "historic": [
                 {
-                    "initial_date": "2024-08-05T08:00:00",
+                    "initial_date": "2024-08-05T08:00:00Z",
                     "room": "Room 20"
                 },
                 {
-                    "initial_date": "2024-08-07T15:34:14",
+                    "initial_date": "2024-08-07T15:34:14Z",
                     "room": "Clinic"
                 },
                 {
-                    "initial_date": "2024-08-07T22:12:16",
+                    "initial_date": "2024-08-07T22:12:16Z",
                     "room": "Room 14"
                 }
             ]
@@ -148,7 +157,8 @@ def equipments_in_same_room():
             "register": "PAT2222",
             "maintenance": False,
             "c_room": "Emergency",
-            "c_date": "2024-08-08T19:54:14",
+            "c_date": "2024-08-08T19:54:14Z",
+            "initial_date": "2024-08-08T19:54:14Z",
             "esp_id": "2222",
             "historic": None,
             "image": None
@@ -174,15 +184,15 @@ def response_historic():
             "register": "PAT1111",
             "historic": [
                 {
-                    "initial_date": "2024-08-05T08:00:00",
+                    "initial_date": "2024-08-05T08:00:00Z",
                     "room": "Room 20"
                 },
                 {
-                    "initial_date": "2024-08-07T15:34:14",
+                    "initial_date": "2024-08-07T15:34:14Z",
                     "room": "Clinic"
                 },
                 {
-                    "initial_date": "2024-08-07T22:12:16",
+                    "initial_date": "2024-08-07T22:12:16Z",
                     "room": "Room 14"
                 }
             ]

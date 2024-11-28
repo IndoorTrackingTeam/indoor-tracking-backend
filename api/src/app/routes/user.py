@@ -118,10 +118,17 @@ def update_user(update_user_photo: UpdateUserPhoto):
     
     return Message(message='Image uploaded successfully')
 
-@router.get('/send-email/redefine-password')
+@router.get('/send-email/redefine-password', status_code=status.HTTP_202_ACCEPTED, response_description='Send an email for the user to redefine the password')
 def send_email_backgroundtasks(background_tasks: BackgroundTasks, email: str):
-    send_email_background(background_tasks, 'Redefinição de senha', email)
+    userDAO = UserDAO()
+    user = userDAO.get_user_by_email(email)
 
+    if user:
+        send_email_background(background_tasks, 'Redefinição de senha', email)
+
+    else:
+        raise HTTPException(status_code=404, detail="User not found")
+    
     return Message(message='Sending email')
 
 @router.put('/redefine-password', status_code=status.HTTP_200_OK, response_description='Redefine password', response_model=Message)

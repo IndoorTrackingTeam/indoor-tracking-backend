@@ -12,6 +12,7 @@ class EquipmentBase(BaseModel):
     maintenance: bool = Field(default=False)
     c_room: str = Field(...)
     c_date: datetime = Field(...)
+    initial_date: Optional[datetime] = Field(default=None)
     esp_id: str = Field(...)
     image: Optional[str] = Field(default=None)
     # esp_id: Optional[str] = Field(default=None)

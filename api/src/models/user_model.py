@@ -36,3 +36,9 @@ class UserData(UserBasicData):
 
 class UpdateUserPhoto(UserId):
     photo: str = Field(...)
+
+class NotificationBody(BaseModel):
+    equipment_name: str = Field(...)
+    register_: str = Field(...)
+    date: datetime = Field(...)
+    location: str = Field(...)

@@ -1,6 +1,6 @@
 from typing import List
 from fastapi import APIRouter, status, HTTPException, Body
-from src.utils.equipment_service import update_database, update_equipments_location
+from src.utils.equipment_service import update_equipments_location
 from src.database.repositories.equipment_repository import EquipmentDAO
 from src.models.equipment_model import EquipmentBase, Equipment, EquipmentMaintenance, AllEquipmentsHistoric, UpdateImage
 from src.utils.converter import Message, convert_mongo_document
@@ -107,9 +107,9 @@ def update_user(update_equipment_image: UpdateImage):
     return Message(message='Image uploaded successfully')
 
 @router.post('/update-equipments-position', status_code=status.HTTP_200_OK, response_description='Update equipments position', response_model=Message)  
-def update_equipments_position():
+async def update_equipments_position():
     try:
-        update_equipments_location()
+        await update_equipments_location()
         return Message(message="Updated equipments position successfully")
                 
     except Exception as e:

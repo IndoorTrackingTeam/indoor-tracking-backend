@@ -81,3 +81,15 @@ def invalid_update_photo():
   "_id": "66d1cd3699dd1572552651dd",
   "photo": "iVBORw0KGgoAAAANSUhEUg-photo-exemple-not-real"
 }
+
+def valid_login_for_redefine_password():
+    return {
+        "email": "jake@email.com",
+        "password": "newpassword123"
+    }
+
+def invalid_login_for_redefine_password():
+    return {
+        "email": "invalid@email.com",
+        "password": "newpassword123"
+    }

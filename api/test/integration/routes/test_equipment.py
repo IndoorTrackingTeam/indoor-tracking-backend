@@ -12,13 +12,13 @@ def config_mongo():
     yield db
     db['equipment'].delete_many({})
     
-def test_get_all_equipments(client: TestClient) -> None:
+def test_read_all_equipments(client: TestClient) -> None:
     response = client.get('/equipment/read-all')
     expected_response = mock.valid_equipments_response()
     assert response.status_code == 200
     assert response.json() == expected_response
 
-def test_history_equipment(client: TestClient) -> None:
+def test_historic_equipment(client: TestClient) -> None:
     response = client.get(f'/equipment/historic')
     expected_response = mock.response_historic()
     assert response.status_code == 200
@@ -58,7 +58,7 @@ def test_read_equipments_by_current_room(client: TestClient) -> None:
     assert response.status_code == 200
     assert response.json() == expected_response
 
-def test_update_equipment(client: TestClient) -> None:
+def test_update_equipment_mainteinance(client: TestClient) -> None:
     body = mock.valid_update_mainteinance()
     response = client.put('/equipment/update-maintenance', json=body)
     assert response.status_code == 200

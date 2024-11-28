@@ -2,7 +2,6 @@ from src.models.user_model import UserBase, Login, UserAdmin, UserBasicData
 from src.database.config_db import Database
 import json
 from bson import ObjectId, json_util 
-import gridfs
 
 class UserDAO: # DAO - Data Access Object
     def __init__(self):
@@ -135,5 +134,14 @@ class UserDAO: # DAO - Data Access Object
             print(f'There was an error trying to change user: {e}')
             return None
     
+    def get_users_emails(self):
+        try:
+            result = self.db.collection.find({}, {'_id': 0, 'email': 1})
+            data_json = json.loads(json_util.dumps(result))
+
+            return data_json
+        except Exception as e:
+            print(f'There was an error when trying to get user: {e}')
+            return False
     
     
