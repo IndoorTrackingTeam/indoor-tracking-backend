@@ -12,3 +12,4 @@ pandas
 scikit-learn
 requests
 fastapi-mail
+pytest-asyncio
