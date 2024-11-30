@@ -48,7 +48,8 @@ jobs:
 
     - name: Integration tests with pytest
       run: |
-        pytest -vv --cov
+        cd api
+        pytest -vv --cov=api --cov-report=xml --cov-report=html
     
   deploy:
     name: Deploy API
