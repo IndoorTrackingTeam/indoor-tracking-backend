@@ -22,8 +22,9 @@ class EquipmentDAO: # DAO - Data Access Object
     
     def create(self, new_equipment: EquipmentBase):
         try:
-            sp_tz = ZoneInfo("America/Sao_Paulo")
-            new_equipment['initial_date'] = datetime.now(sp_tz)
+            if (new_equipment['initial_date'] == ""):
+                sp_tz = ZoneInfo("America/Sao_Paulo")
+                new_equipment['initial_date'] = datetime.now(sp_tz)
 
             result = self.db.collection.insert_one(new_equipment.model_dump(by_alias=True))
             
