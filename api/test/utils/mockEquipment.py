@@ -53,7 +53,7 @@ def valid_equipments_response():
             "maintenance": False,
             "c_room": "Emergency",
             "c_date": "2024-08-08T19:54:14Z",
-            "initial_date": None,
+            "initial_date": "",
             "esp_id": "1111",
             "image": None
         },
@@ -63,7 +63,7 @@ def valid_equipments_response():
             "maintenance": False,
             "c_room": "Emergency",
             "c_date": "2024-08-08T19:54:14Z",
-            "initial_date": None,
+            "initial_date": "",
             "esp_id": "2222",
             "image": None
         },
@@ -73,7 +73,7 @@ def valid_equipments_response():
             "maintenance": True,
             "c_room": "Maintenance room",
             "c_date": "2024-08-08T19:54:14Z",
-            "initial_date": None,
+            "initial_date": "",
             "esp_id": "3333",
             "image": None
         }
