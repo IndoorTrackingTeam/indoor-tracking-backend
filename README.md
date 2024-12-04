@@ -1,25 +1,18 @@
 <p align="center">
-  <img src="assets/logo.png" alt="Logo" width="400" height="200">
+  <img src="assets/logo.png" alt="Logo" width="200" height="200">
 </p>
 
 <p align="center">
-  <a>
-    <img alt="Static Badge" src="https://img.shields.io/badge/IT-Indoor%20Tracking-F1B600?&logoColor=white&link=https%3A%2F%2Fgithub.com%2FIndoorTrackingTeam">
-  </a>
-  <a href="https://github.com/IndoorTrackingTeam/indoor-tracking-backend/actions/workflows/ci-cd-api-deploy-dev.yaml">
-    <img src="https://github.com/IndoorTrackingTeam/indoor-tracking-backend/actions/workflows/ci-cd-api-deploy-dev.yaml/badge.svg?branch=development" alt="Deploy API DEV">
-  </a>
+  <img alt="Static Badge" src="https://img.shields.io/badge/IT-Indoor%20Tracking-F1B600?&logoColor=white">
   <a href="https://github.com/IndoorTrackingTeam/indoor-tracking-backend/actions/workflows/ci-cd-api-deploy-prod.yaml">
-    <img src="https://github.com/IndoorTrackingTeam/indoor-tracking-backend/actions/workflows/ci-cd-api-deploy-prod.yaml/badge.svg" alt="Deploy API DEV">
+    <img alt="API Deploy" src="https://github.com/IndoorTrackingTeam/indoor-tracking-backend/actions/workflows/ci-cd-api-deploy-prod.yaml/badge.svg?branch=main">
   </a>
 </p>
 
-## Tecnologias
-Essas tecnologias foram selecionadas para a aplicação com o objetivo de garantir alto desempenho,  eficiência e alta qualidade na aplicação.
+## Descrição
 
-![Python](https://img.shields.io/badge/Python-323330?style=for-the-badge&logo=python&logoColor=EBFF00)
-![MongoDB](https://img.shields.io/badge/MongoDB-323330?style=for-the-badge&logo=mongodb&logoColor=2A8C4C)
-![Docker](https://img.shields.io/badge/Docker-323330?style=for-the-badge&logo=docker&logoColor=00E0FF)
-![Git](https://img.shields.io/badge/Git-323330?style=for-the-badge&logo=git&logoColor=FFA800)
-![GCP](https://img.shields.io/badge/Google%20Cloud-323330?style=for-the-badge&logo=google-cloud&logoColor=FFFFFF)
-![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-323330?style=for-the-badge&logo=github-actions&logoColor=FFFFFF)
+Este repositório contém a API principal que conecta o front-end e o back-end do sistema Indoor Tracking, suportando aplicações mobile e desktop. Sua estrutura inclui grupos de endpoints projetados para atender a diferentes funcionalidades do sistema, desde o gerenciamento de usuários até o controle de equipamentos e o processamento de dados de localização.
+
+A API também integra dispositivos como o ESP32 para captura de dados de redes Wi-Fi, auxiliando em processos como treinamento de dados e atualização de localizações. Além disso, as configurações de endereços MAC foram otimizadas para garantir flexibilidade e precisão no treinamento de modelos e na aplicação das previsões.
+
+Caso queria acessar a documentação geral do projeto [**clique aqui.**](https://indoortrackingteam.github.io/indoor-tracking-docs/docs/intro)
