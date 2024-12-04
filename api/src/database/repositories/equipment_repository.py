@@ -3,6 +3,7 @@ from datetime import datetime
 import json
 from bson import json_util
 from src.models.equipment_model import EquipmentBase, EquipmentMaintenance, UpdateEquipmentsCurrentRoom, UpdateEquipmentsHistoric, UpdateImage
+from zoneinfo import ZoneInfo
 
 class EquipmentDAO: # DAO - Data Access Object
     def __init__(self):
@@ -21,6 +22,9 @@ class EquipmentDAO: # DAO - Data Access Object
     
     def create(self, new_equipment: EquipmentBase):
         try:
+            sp_tz = ZoneInfo("America/Sao_Paulo")
+            new_equipment['initial_date'] = datetime.now(sp_tz)
+
             result = self.db.collection.insert_one(new_equipment.model_dump(by_alias=True))
             
             return result.acknowledged
@@ -160,7 +164,8 @@ class EquipmentDAO: # DAO - Data Access Object
     
     def update_current_date(self, esp_id: str):
         try:
-            date = datetime.now()
+            sp_tz = ZoneInfo("America/Sao_Paulo")
+            date = datetime.now(sp_tz)
 
             res = self.db.collection.update_one({'esp_id': esp_id},{'$set': {'c_date': date}})
 

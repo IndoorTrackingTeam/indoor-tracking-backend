@@ -3,7 +3,7 @@ from src.models.router_data import RouterTrainingData
 from datetime import datetime
 import json
 from bson import json_util
-
+from zoneinfo import ZoneInfo
 
 class RouterTrainingDataDAO: # DAO - Data Access Object
     def __init__(self):
@@ -11,7 +11,8 @@ class RouterTrainingDataDAO: # DAO - Data Access Object
 
     def create(self, data: RouterTrainingData):
         try:
-            date = datetime.now()
+            sp_tz = ZoneInfo("America/Sao_Paulo")
+            date = datetime.now(sp_tz)
             date_key = date.strftime("%Y-%m-%d %H:%M:%S")
 
             print(date_key)
@@ -30,7 +31,8 @@ class RouterTrainingDataDAO: # DAO - Data Access Object
         
     def update(self, data: RouterTrainingData):
         try:
-            date = datetime.now()
+            sp_tz = ZoneInfo("America/Sao_Paulo")
+            date = datetime.now(sp_tz)
             date_key = date.strftime("%Y-%m-%d %H:%M:%S")
     
             result = self.db.collection.update_one({"room": data.room}, {
