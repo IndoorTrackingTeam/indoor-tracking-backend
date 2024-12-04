@@ -19,7 +19,7 @@ def convert_mongo_document(doc):
         if isinstance(doc.get('c_date'), dict) and '$date' in doc['c_date']:
             doc['c_date'] = doc['c_date']['$date']
 
-    if 'initial_date' in doc:
+    if 'initial_date' in doc and doc['initial_date'] != "":
         doc['initial_date'] = doc['initial_date']['$date']
     if '_id' in doc:
         doc['id'] = str(doc['_id']['$oid'])
