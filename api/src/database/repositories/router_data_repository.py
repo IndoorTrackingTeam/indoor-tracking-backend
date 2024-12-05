@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 import json
 from bson import json_util
 
@@ -11,7 +11,7 @@ class RouterDataDAO: # DAO - Data Access Object
 
     def create(self, data: RouterData):
         try:
-            date = datetime.now()
+            date = datetime.now(timezone.utc)
             date_key = date.strftime("%Y-%m-%d %H:%M:%S")
 
             result = self.db.collection.insert_one({
@@ -28,7 +28,7 @@ class RouterDataDAO: # DAO - Data Access Object
         
     def update(self, data: RouterData):
         try:
-            date = datetime.now()
+            date = datetime.now(timezone.utc)
             date_key = date.strftime("%Y-%m-%d %H:%M:%S")
     
             result = self.db.collection.update_one({"esp_id": data.esp_id}, {

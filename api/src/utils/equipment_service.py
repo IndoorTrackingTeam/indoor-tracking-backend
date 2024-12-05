@@ -1,5 +1,4 @@
-from datetime import datetime
-from zoneinfo import ZoneInfo
+from datetime import datetime, timezone
 import requests
 
 from src.models.equipment_model import UpdateEquipmentsCurrentRoom, UpdateEquipmentsHistoric
@@ -24,7 +23,7 @@ async def update_equipments_location():
                 equipment = equipmentDAO.get_current_room_and_date(esp['esp_id'])
                 
                 if str(new_current_room) != str(equipment['c_room']):
-                    date = datetime.now()
+                    date = datetime.now(timezone.utc)
                     update_database(equipmentDAO, new_current_room, esp['esp_id'], equipment, date)
                     notification_body = NotificationBody(equipment_name=equipment['name'], register_= equipment['register'], date=date, location=equipment['c_room'])
                     await notify_all_users(notification_body)

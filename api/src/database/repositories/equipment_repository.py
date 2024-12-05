@@ -1,5 +1,5 @@
 from src.database.config_db import Database
-from datetime import datetime
+from datetime import datetime, timezone
 import json
 from bson import json_util
 from src.models.equipment_model import EquipmentBase, EquipmentMaintenance, UpdateEquipmentsCurrentRoom, UpdateEquipmentsHistoric, UpdateImage
@@ -21,7 +21,11 @@ class EquipmentDAO: # DAO - Data Access Object
     
     def create(self, new_equipment: EquipmentBase):
         try:
-            result = self.db.collection.insert_one(new_equipment.model_dump(by_alias=True))
+            new_equipment = new_equipment.model_dump(by_alias=True)
+            if new_equipment['initial_date'] == "":
+                new_equipment['initial_date'] = datetime.now(timezone.utc)
+
+            result = self.db.collection.insert_one(new_equipment)
             
             return result.acknowledged
         except Exception as e:
@@ -160,7 +164,7 @@ class EquipmentDAO: # DAO - Data Access Object
     
     def update_current_date(self, esp_id: str):
         try:
-            date = datetime.now()
+            date = datetime.now(timezone.utc)
 
             res = self.db.collection.update_one({'esp_id': esp_id},{'$set': {'c_date': date}})
 

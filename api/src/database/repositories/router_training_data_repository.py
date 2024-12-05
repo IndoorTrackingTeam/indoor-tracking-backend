@@ -1,6 +1,6 @@
 from src.database.config_db import Database
 from src.models.router_data import RouterTrainingData
-from datetime import datetime
+from datetime import datetime, timezone
 import json
 from bson import json_util
 
@@ -11,7 +11,7 @@ class RouterTrainingDataDAO: # DAO - Data Access Object
 
     def create(self, data: RouterTrainingData):
         try:
-            date = datetime.now()
+            date = datetime.now(timezone.utc)
             date_key = date.strftime("%Y-%m-%d %H:%M:%S")
 
             print(date_key)
@@ -30,7 +30,7 @@ class RouterTrainingDataDAO: # DAO - Data Access Object
         
     def update(self, data: RouterTrainingData):
         try:
-            date = datetime.now()
+            date = datetime.now(timezone.utc)
             date_key = date.strftime("%Y-%m-%d %H:%M:%S")
     
             result = self.db.collection.update_one({"room": data.room}, {

@@ -20,5 +20,5 @@ api.include_router(router_data.router, prefix="/router/data", tags=["router-data
 api.include_router(hospital_settings.router, prefix="/settings", tags=["settings"])
 
 if __name__ == "__main__":
-    uvicorn.run("main:api", host="0.0.0.0", port=8000, reload=True)
-    # uvicorn.run("main:api", host="0.0.0.0", port=8000, workers=2)
+    # uvicorn.run("main:api", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("main:api", host="0.0.0.0", port=8000, workers=4)

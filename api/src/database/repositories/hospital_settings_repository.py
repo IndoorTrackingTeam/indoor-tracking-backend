@@ -1,4 +1,3 @@
-from datetime import datetime
 from src.models.hospital_settings_model import MacList
 from src.database.config_db import Database
 
