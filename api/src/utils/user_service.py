@@ -76,14 +76,17 @@ async def send_mail_notification(subject: str, email_to: str, equipment_name: st
     asyncio.create_task(fm.send_message(message))
     
 async def notify_all_users(notification_body: NotificationBody):
-# def notify_all_users():
-    userDAO = UserDAO()
-    emails = userDAO.get_users_emails()
-    
-    date_brasilia = notification_body.date.astimezone(ZoneInfo("America/Sao_Paulo"))
-    date_key = date_brasilia.strftime("%Y-%m-%d %H:%M:%S")
-    # print(emails)
-    if emails:
-        for email in emails:
-            print(email['email'])
-            await send_mail_notification('Equipamento mudou de sala', email['email'], notification_body.equipment_name, notification_body.register_, date_key, notification_body.location)
+    try: 
+    # def notify_all_users():
+        userDAO = UserDAO()
+        emails = userDAO.get_users_emails()
+        
+        date_brasilia = notification_body.date.astimezone(ZoneInfo("America/Sao_Paulo"))
+        date_key = date_brasilia.strftime("%Y-%m-%d %H:%M:%S")
+        # print(emails)
+        if emails:
+            for email in emails:
+                print(email['email'])
+                await send_mail_notification('Equipamento mudou de sala', email['email'], notification_body.equipment_name, notification_body.register_, date_key, notification_body.location)
+    except Exception as e: 
+        print(f"Error sending email: {e}")
