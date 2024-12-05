@@ -3,6 +3,7 @@ import requests
 
 from src.models.equipment_model import UpdateEquipmentsCurrentRoom, UpdateEquipmentsHistoric
 from src.database.repositories.equipment_repository import EquipmentDAO
+from src.database.repositories.router_data_repository import RouterDataDAO
 from src.models.user_model import NotificationBody
 from src.utils.user_service import notify_all_users
 
@@ -11,31 +12,34 @@ url = 'https://run-machine-learning-api-prod-694723526996.us-east1.run.app/model
 async def update_equipments_location():
     try:
         equipmentDAO = EquipmentDAO()
+        routerDAO = RouterDataDAO()
         all_esp = equipmentDAO.get_all_esp_id()
 
         # Updating each esp
         for esp in all_esp:
-            new_url = url + esp['esp_id']
-            response = requests.get(new_url)
+            if routerDAO.get_last_data(esp) != []:
 
-            if response.status_code == 200 and response.json() != "":
-                new_current_room = response.json()
-                equipment = equipmentDAO.get_current_room_and_date(esp['esp_id'])
-                
-                if str(new_current_room) != str(equipment['c_room']):
-                    date = datetime.now(timezone.utc)
-                    update_database(equipmentDAO, new_current_room, esp['esp_id'], equipment, date)
-                    notification_body = NotificationBody(equipment_name=equipment['name'], register_= equipment['register'], date=date, location=equipment['c_room'])
-                    await notify_all_users(notification_body)
-                else:
-                    print("It didn`t move")
+                new_url = url + esp['esp_id']
+                response = requests.get(new_url)
 
-                equipmentDAO.update_current_date(esp['esp_id'])
-            else:
-                if response.json() == "":
-                    print(f'It wasn`t possible to get the room: {response.text}')
+                if response.status_code == 200 and response.json() != "":
+                    new_current_room = response.json()
+                    equipment = equipmentDAO.get_current_room_and_date(esp['esp_id'])
+                    
+                    if str(new_current_room) != str(equipment['c_room']):
+                        date = datetime.now(timezone.utc)
+                        update_database(equipmentDAO, new_current_room, esp['esp_id'], equipment, date)
+                        notification_body = NotificationBody(equipment_name=equipment['name'], register_= equipment['register'], date=date, location=equipment['c_room'])
+                        await notify_all_users(notification_body)
+                    else:
+                        print("It didn`t move")
+
+                    equipmentDAO.update_current_date(esp['esp_id'])
                 else:
-                    print(f'Erro {response.status_code}: {response.text}')
+                    if response.json() == "":
+                        print(f'It wasn`t possible to get the room: {response.text}')
+                    else:
+                        print(f'Erro {response.status_code}: {response.text}')
                 
     except Exception as e:
         print(f'Error when making the request: {e}')
