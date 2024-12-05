@@ -9,7 +9,7 @@ from src.utils.user_service import notify_all_users
 
 url = 'https://run-machine-learning-api-prod-694723526996.us-east1.run.app/model-training/get-esp-position?esp_id='
 
-async def update_equipments_location():
+def update_equipments_location():
     try:
         equipmentDAO = EquipmentDAO()
         routerDAO = RouterDataDAO()
@@ -29,8 +29,8 @@ async def update_equipments_location():
                     if str(new_current_room) != str(equipment['c_room']):
                         date = datetime.now(timezone.utc)
                         update_database(equipmentDAO, new_current_room, esp['esp_id'], equipment, date)
-                        notification_body = NotificationBody(equipment_name=equipment['name'], register_= equipment['register'], date=date, location=equipment['c_room'])
-                        await notify_all_users(notification_body)
+                        # notification_body = NotificationBody(equipment_name=equipment['name'], register_= equipment['register'], date=date, location=equipment['c_room'])
+                        # await notify_all_users(notification_body)
                     else:
                         print("It didn`t move")
 

@@ -107,9 +107,9 @@ def update_user(update_equipment_image: UpdateImage):
     return Message(message='Image uploaded successfully')
 
 @router.post('/update-equipments-position', status_code=status.HTTP_200_OK, response_description='Update equipments position', response_model=Message)  
-async def update_equipments_position():
+def update_equipments_position():
     try:
-        await update_equipments_location()
+        update_equipments_location()
         return Message(message="Updated equipments position successfully")
                 
     except Exception as e:
