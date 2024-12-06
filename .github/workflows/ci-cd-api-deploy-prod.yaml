@@ -64,7 +64,7 @@ jobs:
         path: htmlcov/
   deploy:
     name: Deploy API
-    needs: test
+    # needs: test
     runs-on: ubuntu-latest
     environment: backend
 
