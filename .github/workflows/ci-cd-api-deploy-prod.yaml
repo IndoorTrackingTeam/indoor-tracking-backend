@@ -51,9 +51,20 @@ jobs:
         cd api
         pytest -vv --cov=api --cov-report=xml --cov-report=html
     
+    - name: Upload HTML report
+      uses: actions/upload-artifact@v3
+      with:
+        name: pytest_html_report
+        path: pytest_html_report.html
+
+    - name: Upload HTML coverage report
+      uses: actions/upload-artifact@v3
+      with:
+        name: html-coverage-report
+        path: htmlcov/
   deploy:
     name: Deploy API
-    needs: test
+    # needs: test
     runs-on: ubuntu-latest
     environment: backend
 

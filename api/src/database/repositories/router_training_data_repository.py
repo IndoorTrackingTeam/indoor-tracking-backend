@@ -4,7 +4,6 @@ from datetime import datetime, timezone
 import json
 from bson import json_util
 
-
 class RouterTrainingDataDAO: # DAO - Data Access Object
     def __init__(self):
         self.db = Database(collection='router-training-data')
