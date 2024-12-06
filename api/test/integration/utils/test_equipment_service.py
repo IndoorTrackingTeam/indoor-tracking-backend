@@ -5,6 +5,7 @@ import pytest
 import os
 
 import test.utils.mockEquipment as mock
+import test.utils.mock_router_data as mock_router
 from src.utils.equipment_service import update_equipments_location
 
 
@@ -13,7 +14,9 @@ def config_mongo():
     client = MongoClient(os.getenv('DB_URL'), tlsAllowInvalidCertificates=True)
     db = client['indoor_db_QA']  # Collection específica para testes
     db['equipment'].insert_many(mock.create_valid_equipments())
+    db['router-data'].insert_one(mock_router.valid_router_data())
     yield db
+    db['router-data'].delete_many({})
     db['equipment'].delete_many({})
 
 # Testando função quando mudar a localização

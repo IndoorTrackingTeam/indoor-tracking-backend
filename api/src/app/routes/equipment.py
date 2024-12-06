@@ -52,7 +52,7 @@ def history_equipment():
     historic = equipmentDAO.get_historic()
 
     if historic == []:
-        raise HTTPException(status_code=404, detail="Equipment not found")
+        raise HTTPException(status_code=404, detail="No equipment found")
     if historic == None:
         raise HTTPException(status_code=500)
 

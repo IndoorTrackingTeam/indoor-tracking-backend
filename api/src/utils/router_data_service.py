@@ -44,7 +44,6 @@ def convert_docs_to_df(docs):
     return new_df[macs] # returns a dataframe with only the listed macs and the room
 
 def split_data(df):
-
     #  Divides data into training and testing dat
     train_df, test_df = train_test_split(df, test_size=0.2, random_state=42)
 
@@ -54,6 +53,7 @@ def split_data(df):
     return [train_df, test_df]
 
 def convert_last_data_to_df(doc):
+    print(doc)
     settingsDAO = SettingsDAO()
     macs_docs = settingsDAO.get_mac_list()
 

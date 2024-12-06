@@ -26,6 +26,12 @@ def valid_user():
         "password": "123456"
     }
 
+def create_user_but_missing_field():
+    return {
+        "email": "bo@email.com",
+        "password": "123456"
+    }
+
 def user_already_exist():
     return {
         "name": "Jake Woody",

@@ -5,13 +5,19 @@ import pytest
 import test.utils.mockEquipment as mock
 
 @pytest.fixture(scope="session", autouse=True)
-def config_mongo():
+def config_mongo_():
     client = MongoClient(os.getenv('DB_URL'), tlsAllowInvalidCertificates=True)
     db = client['indoor_db_QA']  # Collection específica para testes
     db['equipment'].insert_many(mock.create_valid_equipments())
     yield db
     db['equipment'].delete_many({})
     
+@pytest.fixture
+def delete_equipments_list():
+    client = MongoClient(os.getenv('DB_URL'), tlsAllowInvalidCertificates=True)
+    db = client['indoor_db_QA']  # Collection específica para testes
+    db['equipment'].delete_many({})
+
 def test_read_all_equipments(client: TestClient) -> None:
     response = client.get('/equipment/read-all')
     expected_response = mock.valid_equipments_response()
@@ -28,6 +34,11 @@ def test_create_equipment(client: TestClient) -> None:
     body = mock.create_valid_equipment()
     response = client.post('/equipment/create', json=body)
     assert response.status_code == 201
+
+def test_create_equipment_missing_filed(client: TestClient) -> None:
+    body = mock.create_equipment_but_missing_field()
+    response = client.post('/equipment/create', json=body)
+    assert response.status_code == 422
 
 def test_create_equipment_invalid_body(client: TestClient) -> None:
     body = {}
@@ -57,6 +68,12 @@ def test_read_equipments_by_current_room(client: TestClient) -> None:
     response = client.get(f'/equipment/get-equipments-by-current-room?current_room={current_room}')
     assert response.status_code == 200
     assert response.json() == expected_response
+
+def test_read_equipments_by_current_room_non_existent_room(client: TestClient) -> None:
+    current_room = 'Room 12'
+    response = client.get(f'/equipment/get-equipments-by-current-room?current_room={current_room}')
+    assert response.status_code == 404
+    assert response.json()["detail"] == "There is no equipment in this room"
 
 def test_update_equipment_mainteinance(client: TestClient) -> None:
     body = mock.valid_update_mainteinance()
@@ -88,3 +105,15 @@ def test_update_image_invalid_register(client: TestClient) -> None:
     response = client.put('/equipment/update-image', json=body)
     assert response.status_code == 404
     
+@pytest.mark.usefixtures("delete_equipments_list")
+def test_read_all_equipments_when_list_is_null(client: TestClient) -> None:
+    response = client.get('/equipment/read-all')
+    expected_response = []
+    assert response.status_code == 200
+    assert response.json() == expected_response
+
+@pytest.mark.usefixtures("delete_equipments_list")
+def test_historic_equipment_not_found(client: TestClient) -> None:
+    response = client.get(f'/equipment/historic')
+    assert response.status_code == 404
+    assert response.json()["detail"] == "No equipment found"
