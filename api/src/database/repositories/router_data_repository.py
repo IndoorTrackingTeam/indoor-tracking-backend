@@ -4,7 +4,6 @@ from bson import json_util
 
 from src.database.config_db import Database
 from src.models.router_data import RouterData
-from zoneinfo import ZoneInfo
 
 class RouterDataDAO: # DAO - Data Access Object
     def __init__(self):

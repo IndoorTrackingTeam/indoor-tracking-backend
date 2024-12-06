@@ -3,7 +3,6 @@ from datetime import datetime, timezone
 import json
 from bson import json_util
 from src.models.equipment_model import EquipmentBase, EquipmentMaintenance, UpdateEquipmentsCurrentRoom, UpdateEquipmentsHistoric, UpdateImage
-from zoneinfo import ZoneInfo
 
 class EquipmentDAO: # DAO - Data Access Object
     def __init__(self):

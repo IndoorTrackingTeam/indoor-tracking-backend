@@ -3,7 +3,6 @@ from src.models.router_data import RouterTrainingData
 from datetime import datetime, timezone
 import json
 from bson import json_util
-from zoneinfo import ZoneInfo
 
 class RouterTrainingDataDAO: # DAO - Data Access Object
     def __init__(self):
