@@ -14,10 +14,11 @@ def parse_date(date_str):
                 # Converter para o horário de São Paulo
                 brasilia_time = utc_time.astimezone(ZoneInfo("America/Sao_Paulo"))
                 print(brasilia_time)
-                data_hora_obj = datetime.fromisoformat(str(brasilia_time))
+                # data_sem_milisegundos = str(brasilia_time).split('.')[0]
+                # data_hora_obj = datetime.fromisoformat(str(brasilia_time))
                 # Remover o fuso horário
-                data_sem_fuso = data_hora_obj.replace(tzinfo=None)
-                return data_sem_fuso
+                # data_sem_fuso = data_hora_obj.replace(tzinfo=None)
+                return brasilia_time
 
             except ValueError:
                 continue
