@@ -90,6 +90,15 @@ def create_valid_equipment():
             "esp_id": "4444"
         }
 
+def create_equipment_but_missing_field():
+    return {
+            "name": "Wheelchair",
+            "maintenance": False,
+            "c_room": "Room 2",
+            "initial_date": "2024-08-08T19:54:14",
+            "esp_id": "4444"
+        }
+
 def equipment_already_exist():
     return {
             "name": "Multi Parameter Monitor",

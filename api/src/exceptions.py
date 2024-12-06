@@ -1,4 +1,3 @@
-# exceptions.py
 
 class DocumentNotFoundError(Exception):
     """Exception raised when a document is not found in MongoDB."""

@@ -20,6 +20,12 @@ def get_user_id():
     id = str(user["_id"])
     return id
 
+@pytest.fixture
+def delete_all_users():
+    client = MongoClient(os.getenv('DB_URL'), tlsAllowInvalidCertificates=True)
+    db = client['indoor_db_QA']  # Collection específica para testes
+    db['user'].delete_many({})
+
 def test_read_all(client: TestClient) -> None:
     response = client.get('/user/read-all')
     expected_response = mock.response_create_valid_users()
@@ -45,6 +51,11 @@ def test_create_new_user(client: TestClient) -> None:
 
 def test_create_new_user_wrong_body(client: TestClient) -> None:
     body = {}
+    response = client.post("/user/create", json=body)
+    assert response.status_code == 422
+
+def test_create_new_user_missing_field(client: TestClient) -> None:
+    body = mock.create_user_but_missing_field()
     response = client.post("/user/create", json=body)
     assert response.status_code == 422
 
@@ -136,3 +147,9 @@ def test_redefine_password_invalid_email(client: TestClient) -> None:
     response = client.put("/user/redefine-password", json=body)
     assert response.status_code == 404
     assert response.json()["detail"] == "User not found"
+
+@pytest.mark.usefixtures("delete_all_users")
+def test_read_all_no_user_found(client: TestClient) -> None:
+    response = client.get('/user/read-all')
+    assert response.status_code == 200
+    assert response.json() == {"message": "No user was found"}

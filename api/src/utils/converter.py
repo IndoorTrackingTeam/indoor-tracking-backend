@@ -37,4 +37,3 @@ def convert_mongo_document(doc):
                 item['initial_date'] = parse_date(initial_date)
 
     return doc
-
