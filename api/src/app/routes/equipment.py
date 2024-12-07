@@ -94,8 +94,8 @@ def delete_equipment(register_: str):
     
     return Message(message='Equipment deleted successfully')
 
-@router.put('/update-image', status_code=status.HTTP_200_OK, response_description='Update user photo', response_model=Message)  
-def update_user(update_equipment_image: UpdateImage):
+@router.put('/update-image', status_code=status.HTTP_200_OK, response_description='Update equipment photo', response_model=Message)  
+def update_image(update_equipment_image: UpdateImage):
     equipmentDAO = EquipmentDAO()
     status = equipmentDAO.update_equipment_image(update_equipment_image)
 
@@ -106,8 +106,8 @@ def update_user(update_equipment_image: UpdateImage):
     
     return Message(message='Image uploaded successfully')
 
-@router.put('/update', status_code=status.HTTP_200_OK, response_description='Update user photo', response_model=Message)  
-def update_user(update_equipment: UpdateEquipments):
+@router.put('/update', status_code=status.HTTP_200_OK, response_description='Update equipment', response_model=Message)  
+def update_equipment_(update_equipment: UpdateEquipments):
     equipmentDAO = EquipmentDAO()
     status = equipmentDAO.update(update_equipment)
 
