@@ -51,3 +51,10 @@ class UpdateEquipmentsHistoric(BaseModel):
 class UpdateEquipmentsCurrentRoom(BaseModel):
     esp_id: str = Field(...)
     c_room: str = Field(...)
+
+class UpdateEquipments(BaseModel):
+    name: str = Field(...)
+    register_: str = Field(alias="register")
+    esp_id: str = Field(...)
+
+    

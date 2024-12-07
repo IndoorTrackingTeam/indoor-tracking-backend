@@ -2,7 +2,7 @@ from src.database.config_db import Database
 from datetime import datetime, timezone
 import json
 from bson import json_util
-from src.models.equipment_model import EquipmentBase, EquipmentMaintenance, UpdateEquipmentsCurrentRoom, UpdateEquipmentsHistoric, UpdateImage
+from src.models.equipment_model import EquipmentBase, EquipmentMaintenance, UpdateEquipmentsCurrentRoom, UpdateEquipmentsHistoric, UpdateImage, UpdateEquipments
 
 class EquipmentDAO: # DAO - Data Access Object
     def __init__(self):
@@ -56,17 +56,17 @@ class EquipmentDAO: # DAO - Data Access Object
             print(f'There was an error trying to get the equipment by current room: {e}')
             return False
         
-    # def update(self, data_equipment):
-    #     try:
-    #         res = self.db.collection.update_one({'register_': data_equipment.register_}, {'$set':  {'name': data_equipment.name, 'last_maintenance': data_equipment.last_maintenance, 'next_maintenance': data_equipment.next_maintenance}})
+    def update(self, data_equipment: UpdateEquipments):
+        try:
+            res = self.db.collection.update_one({'register_': data_equipment.register_}, {'$set':  {'name': data_equipment.name, 'esp_id': data_equipment.esp_id}})
 
-    #         if res.matched_count == 0:
-    #             return False
-    #         else:
-    #             return True
-    #     except Exception as e:
-    #         print(f'Houve um erro ao tentar pegar os equipamentos: {e}')
-    #         return None
+            if res.matched_count == 0:
+                return False
+            else:
+                return True
+        except Exception as e:
+            print(f'Houve um erro ao tentar pegar os equipamentos: {e}')
+            return None
         
     def delete(self, register_):
         try:

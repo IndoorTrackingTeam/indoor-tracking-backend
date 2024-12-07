@@ -2,7 +2,7 @@ from typing import List
 from fastapi import APIRouter, status, HTTPException, Body
 from src.utils.equipment_service import update_equipments_location
 from src.database.repositories.equipment_repository import EquipmentDAO
-from src.models.equipment_model import EquipmentBase, Equipment, EquipmentMaintenance, AllEquipmentsHistoric, UpdateImage
+from src.models.equipment_model import EquipmentBase, Equipment, EquipmentMaintenance, AllEquipmentsHistoric, UpdateImage, UpdateEquipments
 from src.utils.converter import Message, convert_mongo_document
 
 router = APIRouter()
@@ -106,6 +106,18 @@ def update_user(update_equipment_image: UpdateImage):
     
     return Message(message='Image uploaded successfully')
 
+@router.put('/update', status_code=status.HTTP_200_OK, response_description='Update user photo', response_model=Message)  
+def update_user(update_equipment: UpdateEquipments):
+    equipmentDAO = EquipmentDAO()
+    status = equipmentDAO.update(update_equipment)
+
+    if status == False:
+        raise HTTPException(status_code=404, detail='Equipment not found')
+    elif status == None:        
+        raise HTTPException(status_code=500)
+    
+    return Message(message='Updated Equipments successfully')
+
 @router.post('/update-equipments-position', status_code=status.HTTP_200_OK, response_description='Update equipments position', response_model=Message)  
 async def update_equipments_position():
     try:
@@ -114,3 +126,4 @@ async def update_equipments_position():
                 
     except Exception as e:
         Message(message=f'Error when updating equipments position: {e}')
+
