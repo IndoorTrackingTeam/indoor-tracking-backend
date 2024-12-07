@@ -58,7 +58,7 @@ class EquipmentDAO: # DAO - Data Access Object
         
     def update(self, data_equipment: UpdateEquipments):
         try:
-            res = self.db.collection.update_one({'register_': data_equipment.register_}, {'$set':  {'name': data_equipment.name, 'esp_id': data_equipment.esp_id}})
+            res = self.db.collection.update_one({'register': data_equipment.register_}, {'$set':  {'name': data_equipment.name, 'esp_id': data_equipment.esp_id}})
 
             if res.matched_count == 0:
                 return False
